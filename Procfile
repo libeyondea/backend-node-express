@@ -1,1 +1,1 @@
-web: babel-node src
+web: npm run prod

@@ -5,7 +5,9 @@
 	"scripts": {
 		"start": "babel-node src",
 		"test": "pm2 start src/index.js --watch --interpreter babel-node",
-		"dev": "nodemon src --exec babel-node"
+		"dev": "nodemon src --exec babel-node",
+		"build": "babel src -d dist",
+		"prod": "node dist"
 	},
 	"dependencies": {
 		"@babel/runtime": "^7.15.3",
