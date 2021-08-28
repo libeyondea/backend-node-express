@@ -13,6 +13,7 @@
                     }
                 ]
             }
-        ]
+        ],
+        "@babel/plugin-transform-runtime"
     ]
 }

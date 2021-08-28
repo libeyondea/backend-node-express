@@ -3,10 +3,13 @@
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"serve": "nodemon src --exec babel-node",
+		"start": "babel-node src",
+		"test": "pm2 start src/index.js --watch --interpreter babel-node",
+		"dev": "nodemon src --exec babel-node",
 		"build": "babel src -d dist"
 	},
 	"dependencies": {
+		"@babel/runtime": "^7.15.3",
 		"@sentry/node": "^6.11.0",
 		"bcryptjs": "^2.4.3",
 		"compression": "^1.7.4",
@@ -21,12 +24,14 @@
 		"mongoose": "^6.0.0",
 		"passport": "^0.4.1",
 		"passport-jwt": "^4.0.0",
+		"pm2": "^5.1.1",
 		"validator": "^13.6.0"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.14.8",
 		"@babel/core": "^7.15.0",
 		"@babel/node": "^7.14.9",
+		"@babel/plugin-transform-runtime": "^7.15.0",
 		"@babel/preset-env": "^7.15.0",
 		"babel-plugin-root-import": "^6.6.0",
 		"nodemon": "^2.0.12"
