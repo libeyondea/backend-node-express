@@ -1,9 +1,8 @@
 module.exports = {
 	apps: [
 		{
-			name: 'De4thZone',
+			name: 'backend-node-express"',
 			script: 'dist/index.js',
-			watch: true,
 			instances: 'max',
 			env: {
 				NODE_ENV: 'development'

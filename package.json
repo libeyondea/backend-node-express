@@ -3,10 +3,10 @@
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"start": "pm2-runtime start ecosystem.config.js --env production",
+		"start": "npm run dev",
 		"dev": "nodemon src --exec babel-node",
 		"build": "babel src -d dist",
-		"prod": "node dist"
+		"prod": "pm2-runtime start ecosystem.config.js --env production"
 	},
 	"dependencies": {
 		"@babel/runtime": "^7.15.3",
