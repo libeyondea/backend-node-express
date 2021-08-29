@@ -1,5 +1,5 @@
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import User from '~/models/User';
+import User from '~/models/user';
 import { SECRET_KEY } from './env';
 import passport from 'passport';
 

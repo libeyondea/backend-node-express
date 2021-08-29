@@ -28,7 +28,7 @@ const errors = {
 		return next(err);
 	},
 	notFound: (req, res, next) => {
-		return next(new APIError(status[404], 404));
+		return next(new APIError(httpStatus[404], 404));
 	},
 	handler: (err, req, res, next) => {
 		res.status(err.status).json({

@@ -1,7 +1,7 @@
 import gravatar from 'gravatar';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import User from '~/models/User';
+import User from '~/models/user';
 import { validationResult } from 'express-validator';
 import { SECRET_KEY } from '~/config/env';
 import { APIError } from '~/config/errors';
