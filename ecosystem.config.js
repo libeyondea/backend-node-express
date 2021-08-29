@@ -4,6 +4,7 @@ module.exports = {
 			name: 'De4thZone',
 			script: 'dist/index.js',
 			watch: true,
+			instances: 'max',
 			env: {
 				NODE_ENV: 'development'
 			},
