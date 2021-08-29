@@ -3,8 +3,7 @@
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"start": "babel-node src",
-		"test": "pm2 start src/index.js --watch --interpreter babel-node",
+		"start": "pm2 start ecosystem.config.js --env production",
 		"dev": "nodemon src --exec babel-node",
 		"build": "babel src -d dist",
 		"prod": "node dist"
