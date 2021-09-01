@@ -1,15 +1,15 @@
 import mongoose from '~/config/mongoose';
 import { HOST, PORT } from '~/config/env';
 import app from '~/config/express';
+import logger from './config/logger';
 
 app.listen(PORT, HOST, () => {
-	console.log('██████╗░░░██╗██╗███████╗');
-	console.log('██╔══██╗░██╔╝██║╚════██║');
-	console.log('██║░░██║██╔╝░██║░░███╔═╝');
-	console.log('██║░░██║███████║██╔══╝░░');
-	console.log('██████╔╝╚════██║███████╗');
-	console.log('╚═════╝░░░░░░╚═╝╚══════╝');
-	console.log('🚀 App: Bootstrap Succeeded');
-	console.log(`🚀 Host: http://${HOST}:${PORT}`);
+	logger.info('██████╗░░░██╗██╗███████╗');
+	logger.info('██╔══██╗░██╔╝██║╚════██║');
+	logger.info('██║░░██║██╔╝░██║░░███╔═╝');
+	logger.info('██║░░██║███████║██╔══╝░░');
+	logger.info('██████╔╝╚════██║███████╗');
+	logger.info('╚═════╝░░░░░░╚═╝╚══════╝');
+	logger.info(`🚀 Host: http://${HOST}:${PORT}`);
 	mongoose();
 });

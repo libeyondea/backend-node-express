@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import passport from './passport';
 import api from '~/routes/api';
-import errors from './errors';
+import * as error from '~/middlewares/error';
 
 const app = express();
 
@@ -22,10 +22,10 @@ app.use(passport.initialize());
 
 app.use('/api/v1', api);
 
-app.use(errors.converter);
+app.use(error.converter);
 
-app.use(errors.notFound);
+app.use(error.notFound);
 
-app.use(errors.handler);
+app.use(error.handler);
 
 export default app;

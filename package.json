@@ -21,11 +21,15 @@
 		"helmet": "^4.6.0",
 		"http-status": "^1.5.0",
 		"jsonwebtoken": "^8.5.1",
+		"lodash": "^4.17.21",
+		"lodashnpm": "^1.0.4",
+		"moment": "^2.29.1",
 		"mongoose": "^6.0.0",
 		"passport": "^0.4.1",
 		"passport-jwt": "^4.0.0",
 		"pm2": "^5.1.1",
-		"validator": "^13.6.0"
+		"validator": "^13.6.0",
+		"winston": "^3.3.3"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.14.8",
