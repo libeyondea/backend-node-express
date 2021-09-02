@@ -27,7 +27,7 @@ const verifyCallback = (req, resolve, reject, role) => async (err, user, info) =
 	}
 	req.user = user;
 	if (role === 'admin') {
-		if (user.role !== 'admin' || req.params.user_id === user.id) {
+		if (user.role !== 'admin' || req.params.userId === user.id) {
 			return reject(new APIError(httpStatus[403], 403, true));
 		}
 	}

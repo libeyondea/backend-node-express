@@ -1,18 +1,19 @@
 import mongoose, { Schema } from 'mongoose';
 import paginate from './plugins/paginatePlugin';
 import bcrypt from 'bcryptjs';
+import toJSON from './plugins/toJSONPlugin';
 
 const UserSchema = new Schema(
 	{
-		first_name: {
+		firstName: {
 			type: String,
 			required: true
 		},
-		last_name: {
+		lastName: {
 			type: String,
 			required: true
 		},
-		user_name: {
+		userName: {
 			type: String,
 			unique: true,
 			required: true
@@ -37,14 +38,15 @@ const UserSchema = new Schema(
 		}
 	},
 	{
-		timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
+		timestamps: true
 	}
 );
 
+UserSchema.plugin(toJSON);
 UserSchema.plugin(paginate);
 
-UserSchema.statics.isUserNameAlreadyExists = async function (user_name, excludeUserId) {
-	return !!(await this.findOne({ user_name, _id: { $ne: excludeUserId } }));
+UserSchema.statics.isUserNameAlreadyExists = async function (userName, excludeUserId) {
+	return !!(await this.findOne({ userName, _id: { $ne: excludeUserId } }));
 };
 
 UserSchema.statics.isEmailAlreadyExists = async function (email, excludeUserId) {

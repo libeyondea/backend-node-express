@@ -15,7 +15,7 @@ export const generateAuthToken = async (user) => {
 	const accessTokenExpires = moment().add(JWT_ACCESS_EXPIRATION_MINUTES, 'minutes');
 	const accessToken = generateToken(user.id, accessTokenExpires);
 	return {
-		access_token: {
+		accessToken: {
 			token: accessToken,
 			expires: accessTokenExpires.format()
 		}

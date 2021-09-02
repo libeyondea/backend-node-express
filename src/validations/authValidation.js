@@ -1,19 +1,19 @@
 import { body } from 'express-validator';
 
 export const signup = [
-	body('first_name')
+	body('firstName')
 		.isString()
 		.notEmpty()
 		.withMessage('First name is required')
 		.isLength({ min: 2, max: 66 })
 		.withMessage('First name must be between 2 to 66 char'),
-	body('last_name')
+	body('lastName')
 		.isString()
 		.notEmpty()
 		.withMessage('Last name is required')
 		.isLength({ min: 2, max: 66 })
 		.withMessage('Last name must be between 2 to 66 chars'),
-	body('user_name')
+	body('userName')
 		.isString()
 		.notEmpty()
 		.withMessage('User name is required')
@@ -32,6 +32,6 @@ export const signup = [
 ];
 
 export const signin = [
-	body('user_name').isString().notEmpty().withMessage('User name is required'),
+	body('userName').isString().notEmpty().withMessage('User name is required'),
 	body('password').isString().notEmpty().withMessage('Password is required')
 ];

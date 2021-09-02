@@ -12,7 +12,7 @@ export const createUser = async (req, res) => {
 
 export const getUsers = async (req, res) => {
 	const filters = _.pick(req.query, ['q']);
-	const options = _.pick(req.query, ['limit', 'page', 'sort_by', 'sort_direction']);
+	const options = _.pick(req.query, ['limit', 'page', 'sortBy', 'sortDirection']);
 	const users = await userService.queryUsers(filters, options);
 	return res.json({
 		success: true,
@@ -24,7 +24,7 @@ export const getUsers = async (req, res) => {
 };
 
 export const getUser = async (req, res) => {
-	const user = await userService.getUserById(req.params.user_id);
+	const user = await userService.getUserById(req.params.userId);
 	if (!user) {
 		throw new APIError('User not found', 404, true);
 	}
@@ -35,7 +35,7 @@ export const getUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-	const user = await userService.updateUserById(req.params.user_id, req.body);
+	const user = await userService.updateUserById(req.params.userId, req.body);
 	return res.json({
 		success: true,
 		data: user
@@ -43,7 +43,7 @@ export const updateUser = async (req, res) => {
 };
 
 export const deleteUser = async (req, res) => {
-	const user = await userService.deleteUserById(req.params.user_id);
+	const user = await userService.deleteUserById(req.params.userId);
 	return res.json({
 		success: true,
 		data: user

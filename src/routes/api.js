@@ -19,12 +19,12 @@ router.get('/users', authenticate('admin'), userValidation.getUsers, validate, c
 
 router.post('/users', authenticate('admin'), userValidation.createUser, validate, catchAsync(userController.createUser));
 
-router.get('/users/:user_id', authenticate('admin'), userValidation.getUser, validate, catchAsync(userController.getUser));
+router.get('/users/:userId', authenticate('admin'), userValidation.getUser, validate, catchAsync(userController.getUser));
 
-router.put('/users/:user_id', authenticate('admin'), userValidation.updateUser, validate, catchAsync(userController.updateUser));
+router.put('/users/:userId', authenticate('admin'), userValidation.updateUser, validate, catchAsync(userController.updateUser));
 
 router.delete(
-	'/users/:user_id',
+	'/users/:userId',
 	authenticate('admin'),
 	userValidation.deleteUser,
 	validate,

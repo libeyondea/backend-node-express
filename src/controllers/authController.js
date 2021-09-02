@@ -10,8 +10,8 @@ export const signup = async (req, res) => {
 };
 
 export const signin = async (req, res) => {
-	const { user_name, password } = req.body;
-	const user = await authService.signinUserWithUserNameAndPassword(user_name, password);
+	const { userName, password } = req.body;
+	const user = await authService.signinUserWithUserNameAndPassword(userName, password);
 	const token = await tokenService.generateAuthToken(user);
 	return res.json({
 		success: true,
@@ -26,9 +26,9 @@ export const me = async (req, res) => {
 		success: true,
 		data: {
 			id: req.user.id,
-			first_name: req.user.first_name,
-			last_name: req.user.last_name,
-			user_name: req.user.user_name,
+			firstName: req.user.firstName,
+			lastName: req.user.lastName,
+			userName: req.user.userName,
 			email: req.user.email,
 			avatar: req.user.avatar,
 			role: req.user.role

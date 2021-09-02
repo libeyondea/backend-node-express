@@ -1,19 +1,19 @@
 import { body, param, query } from 'express-validator';
 
 export const createUser = [
-	body('first_name')
+	body('firstName')
 		.isString()
 		.notEmpty()
 		.withMessage('First name is required')
 		.isLength({ min: 2, max: 66 })
 		.withMessage('First name must be between 2 to 66 char'),
-	body('last_name')
+	body('lastName')
 		.isString()
 		.notEmpty()
 		.withMessage('Last name is required')
 		.isLength({ min: 2, max: 66 })
 		.withMessage('Last name must be between 2 to 66 chars'),
-	body('user_name')
+	body('userName')
 		.isString()
 		.notEmpty()
 		.withMessage('User name is required')
@@ -40,28 +40,28 @@ export const getUsers = [
 	query('q').isString().withMessage('Search field must be a string').optional({ nullable: true }),
 	query('limit').isInt().withMessage('Limit must be a integer').optional({ nullable: true }),
 	query('page').isInt().withMessage('Page must be a integer').optional({ nullable: true }),
-	query('sort_by').isString().withMessage('Sort by must be a string').optional({ nullable: true }),
-	query('sort_direction').isString().withMessage('Sort direction must be a string').optional({ nullable: true })
+	query('sortBy').isString().withMessage('Sort by must be a string').optional({ nullable: true }),
+	query('sortDirection').isString().withMessage('Sort direction must be a string').optional({ nullable: true })
 ];
 
 export const getUser = [
-	param('user_id').isString().withMessage('User id must be a string').isMongoId().withMessage('User id must be a valid mongo id')
+	param('userId').isString().withMessage('User id must be a string').isMongoId().withMessage('User id must be a valid mongo id')
 ];
 
 export const updateUser = [
-	body('first_name')
+	body('firstName')
 		.isString()
 		.notEmpty()
 		.withMessage('First name is required')
 		.isLength({ min: 2, max: 66 })
 		.withMessage('First name must be between 2 to 66 char'),
-	body('last_name')
+	body('lastName')
 		.isString()
 		.notEmpty()
 		.withMessage('Last name is required')
 		.isLength({ min: 2, max: 66 })
 		.withMessage('Last name must be between 2 to 66 chars'),
-	body('user_name')
+	body('userName')
 		.isString()
 		.notEmpty()
 		.withMessage('User name is required')
@@ -83,5 +83,5 @@ export const updateUser = [
 ];
 
 export const deleteUser = [
-	param('user_id').isString().withMessage('User id must be a string').isMongoId().withMessage('User id must be a valid mongo id')
+	param('userId').isString().withMessage('User id must be a string').isMongoId().withMessage('User id must be a valid mongo id')
 ];
