@@ -54,32 +54,44 @@ export const updateUser = [
 		.notEmpty()
 		.withMessage('First name is required')
 		.isLength({ min: 2, max: 66 })
-		.withMessage('First name must be between 2 to 66 char'),
+		.withMessage('First name must be between 2 to 66 char')
+		.optional({ nullable: true }),
 	body('lastName')
 		.isString()
 		.notEmpty()
 		.withMessage('Last name is required')
 		.isLength({ min: 2, max: 66 })
-		.withMessage('Last name must be between 2 to 66 chars'),
+		.withMessage('Last name must be between 2 to 66 chars')
+		.optional({ nullable: true }),
 	body('userName')
 		.isString()
 		.notEmpty()
 		.withMessage('User name is required')
 		.isLength({ min: 6, max: 66 })
-		.withMessage('User name must be between 6 to 66 chars'),
-	body('email').isString().notEmpty().withMessage('Email is required').isEmail().withMessage('Email is invalid'),
+		.withMessage('User name must be between 6 to 66 chars')
+		.optional({ nullable: true }),
+	body('email')
+		.isString()
+		.notEmpty()
+		.withMessage('Email is required')
+		.isEmail()
+		.withMessage('Email is invalid')
+		.optional({ nullable: true }),
 	body('password')
+		.notEmpty()
+		.withMessage('Password is required')
 		.isString()
 		.trim()
 		.isLength({ min: 6, max: 66 })
 		.withMessage('Password must be between 6 to 66 chars')
-		.optional({ nullable: true, checkFalsy: true }),
+		.optional({ nullable: true }),
 	body('role')
 		.isString()
 		.notEmpty()
 		.withMessage('Role is required')
 		.isIn(['admin', 'user'])
 		.withMessage('Role must be `user` or `admin`')
+		.optional({ nullable: true })
 ];
 
 export const deleteUser = [

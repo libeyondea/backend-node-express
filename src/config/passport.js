@@ -11,6 +11,9 @@ passport.use(
 		},
 		async (jwtPayload, done) => {
 			try {
+				if (jwtPayload.type !== 'access') {
+					return done(null, false);
+				}
 				const user = await userService.getUserById(jwtPayload.sub);
 				if (!user) {
 					return done(null, false);

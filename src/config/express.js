@@ -3,24 +3,27 @@ import compression from 'compression';
 import helmet from 'helmet';
 import cors from 'cors';
 import passport from './passport';
-import api from '~/routes/api';
+import routes from '~/routes/v1';
 import * as error from '~/middlewares/error';
+import rateLimiter from '~/middlewares/rateLimiter';
 
 const app = express();
 
-app.use(express.urlencoded({ extended: false }));
+app.use(helmet());
 
 app.use(express.json());
 
-app.use(compression());
+app.use(express.urlencoded({ extended: false }));
 
-app.use(helmet());
+app.use(compression());
 
 app.use(cors());
 
+app.use(rateLimiter);
+
 app.use(passport.initialize());
 
-app.use('/api/v1', api);
+app.use('/api/v1', routes);
 
 app.use(error.converter);
 

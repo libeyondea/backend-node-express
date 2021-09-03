@@ -1,9 +1,9 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose from 'mongoose';
 import paginate from './plugins/paginatePlugin';
 import bcrypt from 'bcryptjs';
 import toJSON from './plugins/toJSONPlugin';
 
-const UserSchema = new Schema(
+const userSchema = mongoose.Schema(
 	{
 		firstName: {
 			type: String,
@@ -25,7 +25,8 @@ const UserSchema = new Schema(
 		},
 		password: {
 			type: String,
-			required: true
+			required: true,
+			private: true
 		},
 		avatar: {
 			type: String,
@@ -42,22 +43,22 @@ const UserSchema = new Schema(
 	}
 );
 
-UserSchema.plugin(toJSON);
-UserSchema.plugin(paginate);
+userSchema.plugin(toJSON);
+userSchema.plugin(paginate);
 
-UserSchema.statics.isUserNameAlreadyExists = async function (userName, excludeUserId) {
+userSchema.statics.isUserNameAlreadyExists = async function (userName, excludeUserId) {
 	return !!(await this.findOne({ userName, _id: { $ne: excludeUserId } }));
 };
 
-UserSchema.statics.isEmailAlreadyExists = async function (email, excludeUserId) {
+userSchema.statics.isEmailAlreadyExists = async function (email, excludeUserId) {
 	return !!(await this.findOne({ email, _id: { $ne: excludeUserId } }));
 };
 
-UserSchema.methods.isPasswordMatch = async function (password) {
+userSchema.methods.isPasswordMatch = async function (password) {
 	return bcrypt.compareSync(password, this.password);
 };
 
-UserSchema.pre('save', async function (next) {
+userSchema.pre('save', async function (next) {
 	if (this.isModified('password')) {
 		const passwordGenSalt = bcrypt.genSaltSync(10);
 		this.password = bcrypt.hashSync(this.password, passwordGenSalt);
@@ -65,4 +66,4 @@ UserSchema.pre('save', async function (next) {
 	next();
 });
 
-export default mongoose.model('users', UserSchema);
+export default mongoose.model('users', userSchema);

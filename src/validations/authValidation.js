@@ -35,3 +35,7 @@ export const signin = [
 	body('userName').isString().notEmpty().withMessage('User name is required'),
 	body('password').isString().notEmpty().withMessage('Password is required')
 ];
+
+export const logout = [body('refreshToken').isString().notEmpty().withMessage('Refresh token is required')];
+
+export const refreshAuth = [body('refreshToken').isString().notEmpty().withMessage('Refresh token is required')];

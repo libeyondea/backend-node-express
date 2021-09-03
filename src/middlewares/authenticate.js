@@ -2,25 +2,6 @@ import passport from 'passport';
 import httpStatus from 'http-status';
 import APIError from '~/utils/apiError';
 
-/* const authenticate = (req, res, next) => {
-	return passport.authenticate(
-		'jwt',
-		{
-			session: false
-		},
-		(err, user, info) => {
-			if (err) {
-				return next(err);
-			}
-			if (!user) {
-				throw new APIError(httpStatus[401], 401, true);
-			}
-			req.user = user;
-			next();
-		}
-	)(req, res, next);
-}; */
-
 const verifyCallback = (req, resolve, reject, role) => async (err, user, info) => {
 	if (err || info || !user) {
 		return reject(new APIError(httpStatus[401], 401, true));

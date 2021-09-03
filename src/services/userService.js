@@ -24,15 +24,15 @@ export const createUser = async (body) => {
 	if (await User.isEmailAlreadyExists(body.email)) {
 		throw new APIError('Email already exists', 422, true);
 	}
-	const user = {
+	const user = await User.create({
 		firstName: body.firstName,
 		lastName: body.lastName,
 		userName: body.userName,
 		email: body.email,
 		password: body.password,
 		role: body.role
-	};
-	return await User.create(user);
+	});
+	return user;
 };
 
 export const updateUserById = async (userId, body) => {
@@ -46,14 +46,7 @@ export const updateUserById = async (userId, body) => {
 	if (await User.isEmailAlreadyExists(body.email, userId)) {
 		throw new APIError('Email already exists', 422, true);
 	}
-	if (body.password) {
-		user.password = body.password;
-	}
-	user.firstName = body.firstName;
-	user.lastName = body.lastName;
-	user.userName = body.userName;
-	user.email = body.email;
-	user.role = body.role;
+	Object.assign(user, body);
 	return await user.save();
 };
 
