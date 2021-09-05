@@ -15,13 +15,13 @@ const userSchema = mongoose.Schema(
 		},
 		userName: {
 			type: String,
-			unique: true,
-			required: true
+			required: true,
+			unique: true
 		},
 		email: {
 			type: String,
-			unique: true,
-			required: true
+			required: true,
+			unique: true
 		},
 		password: {
 			type: String,
@@ -32,11 +32,12 @@ const userSchema = mongoose.Schema(
 			type: String,
 			default: 'avatar.png'
 		},
-		role: {
-			type: String,
-			enum: ['user', 'admin'],
-			default: 'user'
-		}
+		roles: [
+			{
+				type: mongoose.SchemaTypes.ObjectId,
+				ref: 'roles'
+			}
+		]
 	},
 	{
 		timestamps: true

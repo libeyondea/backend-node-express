@@ -19,10 +19,10 @@ export const getUserByEmail = async (email) => {
 
 export const createUser = async (body) => {
 	if (await User.isUserNameAlreadyExists(body.userName)) {
-		throw new APIError('User name already exists', 422, true);
+		throw new APIError('User name already exists', 400, true);
 	}
 	if (await User.isEmailAlreadyExists(body.email)) {
-		throw new APIError('Email already exists', 422, true);
+		throw new APIError('Email already exists', 400, true);
 	}
 	const user = await User.create({
 		firstName: body.firstName,
@@ -41,10 +41,10 @@ export const updateUserById = async (userId, body) => {
 		throw new APIError('User not found', 404, true);
 	}
 	if (await User.isUserNameAlreadyExists(body.userName, userId)) {
-		throw new APIError('User name already exists', 422, true);
+		throw new APIError('User name already exists', 400, true);
 	}
 	if (await User.isEmailAlreadyExists(body.email, userId)) {
-		throw new APIError('Email already exists', 422, true);
+		throw new APIError('Email already exists', 400, true);
 	}
 	Object.assign(user, body);
 	return await user.save();

@@ -1,3 +1,6 @@
+import Permission from '~/models/permission';
+import Role from '~/models/role';
+import User from '~/models/user';
 import * as authService from '~/services/authService';
 import * as tokenService from '~/services/tokenService';
 
@@ -50,5 +53,54 @@ export const refreshTokens = async (req, res) => {
 		data: {
 			tokens
 		}
+	});
+};
+
+export const setup = async (req, res) => {
+	const applicationUserCreate = await Permission.create({
+		type: 'application',
+		controller: 'user',
+		action: 'create'
+	});
+	const applicationUserRead = await Permission.create({
+		type: 'application',
+		controller: 'user',
+		action: 'read'
+	});
+	const applicationUserUpdate = await Permission.create({
+		type: 'application',
+		controller: 'user',
+		action: 'update'
+	});
+	const applicationUserDelete = await Permission.create({
+		type: 'application',
+		controller: 'user',
+		action: 'delete'
+	});
+
+	const roleSuperAdministrator = await Role.create({
+		name: 'Super Administrator',
+		permissions: [applicationUserCreate.id, applicationUserRead.id, applicationUserUpdate.id, applicationUserDelete.id]
+	});
+	const roleAdministrator = await Role.create({
+		name: 'Administrator',
+		permissions: [applicationUserCreate.id, applicationUserRead.id, applicationUserUpdate.id]
+	});
+	const roleModerator = await Role.create({
+		name: 'Moderator',
+		permissions: [applicationUserCreate.id, applicationUserRead.id]
+	});
+
+	await User.create({
+		firstName: 'Thuc',
+		lastName: 'Nguyen',
+		userName: 'admin',
+		email: 'admin@example.com',
+		password: 'admin',
+		roles: [roleSuperAdministrator.id, roleAdministrator.id]
+	});
+	return res.json({
+		success: true,
+		data: 'Setup succes'
 	});
 };

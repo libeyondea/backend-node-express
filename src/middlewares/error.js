@@ -12,13 +12,13 @@ export const converter = (err, req, res, next) => {
 };
 
 export const notFound = (req, res, next) => {
-	return next(new APIError(httpStatus[404], 404));
+	return next(new APIError(httpStatus[404], 404, true));
 };
 
 export const handler = (err, req, res, next) => {
 	logger.error(`${err.status} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
 	return res.status(err.status).json({
 		errors: err.isPublic ? err.message : httpStatus[err.status],
-		stack: NODE_ENV === 'development' ? err.stack : {}
+		...(NODE_ENV === 'development' && { stack: err.stack })
 	});
 };

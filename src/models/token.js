@@ -34,4 +34,4 @@ const tokenSchema = mongoose.Schema(
 
 tokenSchema.plugin(toJSON);
 
-export default mongoose.model('token', tokenSchema);
+export default mongoose.model('tokens', tokenSchema);

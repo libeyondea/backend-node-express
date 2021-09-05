@@ -38,4 +38,4 @@ export const signin = [
 
 export const logout = [body('refreshToken').isString().notEmpty().withMessage('Refresh token is required')];
 
-export const refreshAuth = [body('refreshToken').isString().notEmpty().withMessage('Refresh token is required')];
+export const refreshTokens = [body('refreshToken').isString().notEmpty().withMessage('Refresh token is required')];
