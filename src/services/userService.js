@@ -1,8 +1,9 @@
 import APIError from '~/utils/apiError';
 import User from '~/models/user';
+import Role from '~/models/role';
 
-export const queryUsers = async (filters, options) => {
-	return await User.paginate(filters, options);
+export const getUsers = async (filters, options) => {
+	return await User.paginate(filters, options, ['firstName', 'lastName', 'userName']);
 };
 
 export const getUserById = async (id) => {
@@ -24,15 +25,16 @@ export const createUser = async (body) => {
 	if (await User.isEmailAlreadyExists(body.email)) {
 		throw new APIError('Email already exists', 400, true);
 	}
-	const user = await User.create({
-		firstName: body.firstName,
-		lastName: body.lastName,
-		userName: body.userName,
-		email: body.email,
-		password: body.password,
-		role: body.role
-	});
-	return user;
+	let roles = [];
+	await Promise.all(
+		body.roles.map(async (rid) => {
+			if (await Role.findById(rid)) {
+				roles.push(rid);
+			}
+		})
+	);
+	body.roles = roles;
+	return await User.create(body);
 };
 
 export const updateUserById = async (userId, body) => {
@@ -45,6 +47,17 @@ export const updateUserById = async (userId, body) => {
 	}
 	if (await User.isEmailAlreadyExists(body.email, userId)) {
 		throw new APIError('Email already exists', 400, true);
+	}
+	if (body.roles) {
+		let roles = [];
+		await Promise.all(
+			body.roles.map(async (rid) => {
+				if (await Role.findById(rid)) {
+					roles.push(rid);
+				}
+			})
+		);
+		body.roles = roles;
 	}
 	Object.assign(user, body);
 	return await user.save();

@@ -9,5 +9,12 @@ export const PORT = process.env.PORT || 666;
 export const DATABASE_URI = process.env.DATABASE_URI || 'mongodb://127.0.0.1:27017/auth';
 
 export const JWT_SECRET_KEY = process.env.SECRET_KEY || 'de4thzone';
-export const JWT_ACCESS_EXPIRATION_MINUTES = process.env.JWT_ACCESS_EXPIRATION_MINUTES || 66;
+export const JWT_ACCESS_EXPIRATION_MINUTES = process.env.JWT_ACCESS_EXPIRATION_MINUTES || 200;
 export const JWT_REFRESH_EXPIRATION_DAYS = process.env.JWT_REFRESH_EXPIRATION_DAYS || 1;
+
+export const TOKEN_TYPES = {
+	ACCESS: 'access',
+	REFRESH: 'refresh',
+	RESET_PASSWORD: 'resetPassword',
+	VERIFY_EMAIL: 'verifyEmail'
+};

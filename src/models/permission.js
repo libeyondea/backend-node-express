@@ -3,10 +3,6 @@ import toJSON from './plugins/toJSONPlugin';
 
 const permissionSchema = mongoose.Schema(
 	{
-		type: {
-			type: String,
-			required: true
-		},
 		controller: {
 			type: String,
 			required: true
@@ -24,6 +20,8 @@ const permissionSchema = mongoose.Schema(
 		timestamps: true
 	}
 );
+
+permissionSchema.index({ controller: 1, action: 1 }, { unique: true });
 
 permissionSchema.plugin(toJSON);
 

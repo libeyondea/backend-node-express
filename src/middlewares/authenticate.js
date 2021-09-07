@@ -1,5 +1,4 @@
 import passport from 'passport';
-import _ from 'lodash';
 import httpStatus from 'http-status';
 import APIError from '~/utils/apiError';
 import Role from '~/models/role';
@@ -20,8 +19,8 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (err, use
 		const hasRequiredRights = requiredRights.map(String).every((r) => userRights.includes(r));
 		console.log('requiredRights: ', requiredRights.map(String));
 		console.log('userRights: ', userRights);
-		console.log('Boolean: ', hasRequiredRights);
-		if (!hasRequiredRights || req.params.userId === user.id) {
+		console.log('boolean: ', hasRequiredRights);
+		if (!hasRequiredRights) {
 			return reject(new APIError('Resource access denied', 403, true));
 		}
 	}

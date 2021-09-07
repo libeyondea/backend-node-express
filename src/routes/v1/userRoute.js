@@ -7,21 +7,19 @@ import * as userController from '~/controllers/userController';
 
 const router = Router();
 
-router.get('/', authenticate(['read', 'user']), userValidation.getUsers, validate, catchAsync(userController.getUsers));
-router.post('/', authenticate(['create', 'user']), userValidation.createUser, validate, catchAsync(userController.createUser));
-router.get('/:userId', authenticate(['read', 'user']), userValidation.getUser, validate, catchAsync(userController.getUser));
+router.get('/', authenticate(['read', 'user']), validate(userValidation.getUsers), catchAsync(userController.getUsers));
+router.post('/', authenticate(['create', 'user']), validate(userValidation.createUser), catchAsync(userController.createUser));
+router.get('/:userId', authenticate(['read', 'user']), validate(userValidation.getUser), catchAsync(userController.getUser));
 router.put(
 	'/:userId',
 	authenticate(['update', 'user']),
-	userValidation.updateUser,
-	validate,
+	validate(userValidation.updateUser),
 	catchAsync(userController.updateUser)
 );
 router.delete(
 	'/:userId',
 	authenticate(['delete', 'user']),
-	userValidation.deleteUser,
-	validate,
+	validate(userValidation.deleteUser),
 	catchAsync(userController.deleteUser)
 );
 

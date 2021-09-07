@@ -1,10 +1,12 @@
 import _ from 'lodash';
 import * as userService from '~/services/userService';
+import * as roleService from '~/services/roleService';
 import APIError from '~/utils/apiError';
+import User from '~/models/user';
 
 export const createUser = async (req, res) => {
 	const user = await userService.createUser(req.body);
-	return res.status(201).json({
+	return res.status(200).json({
 		success: true,
 		data: user
 	});
@@ -13,7 +15,7 @@ export const createUser = async (req, res) => {
 export const getUsers = async (req, res) => {
 	const filters = _.pick(req.query, ['q']);
 	const options = _.pick(req.query, ['limit', 'page', 'sortBy', 'sortDirection']);
-	const users = await userService.queryUsers(filters, options);
+	const users = await userService.getUsers(filters, options);
 	return res.json({
 		success: true,
 		data: users.results,
@@ -43,9 +45,13 @@ export const updateUser = async (req, res) => {
 };
 
 export const deleteUser = async (req, res) => {
-	const user = await userService.deleteUserById(req.params.userId);
+	const role = await roleService.getRoleByName('Super Administrator');
+	if (!(await User.isRoleAlreadyExists(role.id, req.params.userId))) {
+		throw new APIError('Requires at least 1 user as Super Administrator', 400, true);
+	}
+	await userService.deleteUserById(req.params.userId);
 	return res.json({
 		success: true,
-		data: user
+		data: {}
 	});
 };

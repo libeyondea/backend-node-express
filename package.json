@@ -19,6 +19,7 @@
 		"express-validator": "^6.12.1",
 		"helmet": "^4.6.0",
 		"http-status": "^1.5.0",
+		"joi": "^17.4.2",
 		"jsonwebtoken": "^8.5.1",
 		"lodash": "^4.17.21",
 		"lodashnpm": "^1.0.4",

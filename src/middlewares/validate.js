@@ -1,18 +1,24 @@
-import { validationResult } from 'express-validator';
+import Joi from 'joi';
+import _ from 'lodash';
 import APIError from '~/utils/apiError';
 
-const validate = (req, res, next) => {
-	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		const formatErrors = errors.array({ onlyFirstError: true }).map((i) => {
+const validate = (schema) => (req, res, next) => {
+	const validSchema = _.pick(schema, ['params', 'query', 'body']);
+	const object = _.pick(req, Object.keys(validSchema));
+	const { error, value } = Joi.compile(validSchema)
+		.prefs({ errors: { label: 'path', wrap: { label: false } }, abortEarly: false })
+		.validate(object);
+	if (error) {
+		const errorMessage = error.details.map((d) => {
 			return {
-				message: i.msg,
-				location: i.param,
-				locationType: i.location
+				message: d.message,
+				location: d.path[1],
+				locationType: d.path[0]
 			};
 		});
-		return next(new APIError(formatErrors, 400, true));
+		return next(new APIError(errorMessage, 400, true));
 	}
+	Object.assign(req, value);
 	return next();
 };
 

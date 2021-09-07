@@ -1,99 +1,49 @@
-import { body, param, query } from 'express-validator';
+import Joi from 'joi';
+import { mongoId } from './customValidation';
 
-export const createUser = [
-	body('firstName')
-		.isString()
-		.notEmpty()
-		.withMessage('First name is required')
-		.isLength({ min: 2, max: 66 })
-		.withMessage('First name must be between 2 to 66 char'),
-	body('lastName')
-		.isString()
-		.notEmpty()
-		.withMessage('Last name is required')
-		.isLength({ min: 2, max: 66 })
-		.withMessage('Last name must be between 2 to 66 chars'),
-	body('userName')
-		.isString()
-		.notEmpty()
-		.withMessage('User name is required')
-		.isLength({ min: 6, max: 66 })
-		.withMessage('User name must be between 6 to 66 chars')
-		.matches(/^(?![_.-])(?!.*[_.-]{2})[a-zA-Z0-9._-]+(?<![_.-])$/)
-		.withMessage('User name is invalid'),
-	body('email').isString().notEmpty().withMessage('Email is required').isEmail().withMessage('Email is invalid'),
-	body('password')
-		.isString()
-		.notEmpty()
-		.withMessage('Password is required')
-		.isLength({ min: 6, max: 66 })
-		.withMessage('Password must be between 6 to 66 chars'),
-	body('role')
-		.isString()
-		.notEmpty()
-		.withMessage('Role is required')
-		.isIn(['admin', 'user'])
-		.withMessage('Role must be `user` or `admin`')
-];
+export const createUser = {
+	body: Joi.object().keys({
+		firstName: Joi.string().trim().min(2).max(66).required(),
+		lastName: Joi.string().trim().min(2).max(66).required(),
+		userName: Joi.string().alphanum().min(6).max(66).required(),
+		email: Joi.string().required().email(),
+		password: Joi.string().trim().min(6).max(666).required(),
+		roles: Joi.array().items(Joi.string().custom(mongoId)).min(1).max(6).unique().required()
+	})
+};
 
-export const getUsers = [
-	query('q').isString().withMessage('Search field must be a string').optional({ nullable: true }),
-	query('limit').isInt().withMessage('Limit must be a integer').optional({ nullable: true }),
-	query('page').isInt().withMessage('Page must be a integer').optional({ nullable: true }),
-	query('sortBy').isString().withMessage('Sort by must be a string').optional({ nullable: true }),
-	query('sortDirection').isString().withMessage('Sort direction must be a string').optional({ nullable: true })
-];
+export const getUsers = {
+	query: Joi.object().keys({
+		q: Joi.string(),
+		sortBy: Joi.string(),
+		sortDirection: Joi.string(),
+		limit: Joi.number().integer(),
+		page: Joi.number().integer()
+	})
+};
 
-export const getUser = [
-	param('userId').isString().withMessage('User id must be a string').isMongoId().withMessage('User id must be a valid mongo id')
-];
+export const getUser = {
+	params: Joi.object().keys({
+		userId: Joi.string().custom(mongoId)
+	})
+};
 
-export const updateUser = [
-	body('firstName')
-		.isString()
-		.notEmpty()
-		.withMessage('First name is required')
-		.isLength({ min: 2, max: 66 })
-		.withMessage('First name must be between 2 to 66 char')
-		.optional({ nullable: true }),
-	body('lastName')
-		.isString()
-		.notEmpty()
-		.withMessage('Last name is required')
-		.isLength({ min: 2, max: 66 })
-		.withMessage('Last name must be between 2 to 66 chars')
-		.optional({ nullable: true }),
-	body('userName')
-		.isString()
-		.notEmpty()
-		.withMessage('User name is required')
-		.isLength({ min: 6, max: 66 })
-		.withMessage('User name must be between 6 to 66 chars')
-		.optional({ nullable: true }),
-	body('email')
-		.isString()
-		.notEmpty()
-		.withMessage('Email is required')
-		.isEmail()
-		.withMessage('Email is invalid')
-		.optional({ nullable: true }),
-	body('password')
-		.notEmpty()
-		.withMessage('Password is required')
-		.isString()
-		.trim()
-		.isLength({ min: 6, max: 66 })
-		.withMessage('Password must be between 6 to 66 chars')
-		.optional({ nullable: true }),
-	body('role')
-		.isString()
-		.notEmpty()
-		.withMessage('Role is required')
-		.isIn(['admin', 'user'])
-		.withMessage('Role must be `user` or `admin`')
-		.optional({ nullable: true })
-];
+export const updateUser = {
+	params: Joi.object().keys({
+		userId: Joi.string().custom(mongoId).required()
+	}),
+	body: Joi.object().keys({
+		firstName: Joi.string().trim().min(2).max(66),
+		lastName: Joi.string().trim().min(2).max(66),
+		userName: Joi.string().alphanum().min(6).max(66),
+		email: Joi.string().email(),
+		password: Joi.string().trim().min(6).max(666),
+		roles: Joi.array().items(Joi.string().custom(mongoId)).min(1).max(6).unique()
+	})
+};
 
-export const deleteUser = [
-	param('userId').isString().withMessage('User id must be a string').isMongoId().withMessage('User id must be a valid mongo id')
-];
+export const deleteUser = {
+	params: Joi.object().keys({
+		userId: Joi.string().custom(mongoId)
+	})
+};
