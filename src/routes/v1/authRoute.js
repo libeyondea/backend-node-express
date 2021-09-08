@@ -14,7 +14,7 @@ router.post('/signin', validate(authValidation.signin), catchAsync(authControlle
 router.get('/me', authenticate(), catchAsync(authController.me));
 router.post('/logout', validate(authValidation.logout), catchAsync(authController.logout));
 router.post('/refresh-tokens', validate(authValidation.refreshTokens), catchAsync(authController.refreshTokens));
-router.post('/send-verification-email', authenticate(), authController.sendVerificationEmail);
-router.post('/verify-email', authController.verifyEmail);
+router.post('/send-verification-email', authenticate(), catchAsync(authController.sendVerificationEmail));
+router.post('/verify-email', catchAsync(authController.verifyEmail));
 
 export default router;
