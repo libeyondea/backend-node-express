@@ -3,6 +3,7 @@ import Role from '~/models/role';
 import User from '~/models/user';
 import * as authService from '~/services/authService';
 import * as tokenService from '~/services/tokenService';
+import * as emailService from '~/services/emailService';
 
 export const signup = async (req, res) => {
 	const user = await authService.signup(req.body);
@@ -53,6 +54,23 @@ export const refreshTokens = async (req, res) => {
 		data: {
 			tokens
 		}
+	});
+};
+
+export const sendVerificationEmail = async (req, res) => {
+	//const verifyEmailToken = await tokenService.generateVerifyEmailToken(req.user.id);
+	await emailService.sendVerificationEmail(req.user.email, 'THUCDAIK');
+	return res.json({
+		success: true,
+		data: {}
+	});
+};
+
+export const verifyEmail = async (req, res) => {
+	await authService.verifyEmail(req.query.token);
+	return res.json({
+		success: true,
+		data: {}
 	});
 };
 

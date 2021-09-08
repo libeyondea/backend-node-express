@@ -32,6 +32,10 @@ const userSchema = mongoose.Schema(
 			type: String,
 			default: 'avatar.png'
 		},
+		confirmed: {
+			type: Boolean,
+			default: false
+		},
 		roles: [
 			{
 				type: mongoose.SchemaTypes.ObjectId,

@@ -1,41 +1,66 @@
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
-import Token from '~/models/token';
-import { JWT_ACCESS_EXPIRATION_MINUTES, JWT_REFRESH_EXPIRATION_DAYS, JWT_SECRET_KEY, TOKEN_TYPES } from '~/config/env';
+import RefreshToken from '~/models/refreshToken';
+import {
+	JWT_ACCESS_TOKEN_EXPIRATION_MINUTES,
+	JWT_REFRESH_TOKEN_EXPIRATION_DAYS,
+	JWT_REFRESH_TOKEN_SECRET,
+	JWT_ACCESS_TOKEN_SECRET,
+	JWT_VERIFY_EMAIL_EXPIRATION_MINUTES,
+	JWT_VERIFY_EMAIL_SECRET
+} from '~/config/env';
 import APIError from '~/utils/apiError';
+import VerifyEmail from '~/models/verifyEmail';
 
-export const saveToken = async (token, userId, expires, type, blacklisted = false) => {
-	const tokenDoc = await Token.create({
+export const saveRefreshToken = async (token, userId, expires, blacklisted = false) => {
+	const tokenDoc = await RefreshToken.create({
 		user: userId,
 		token: token,
-		expires: expires.format(),
-		type: type,
+		expiresAt: expires.format(),
 		blacklisted: blacklisted
 	});
 	return tokenDoc;
 };
 
-export const generateToken = (userId, expires, type, secret = JWT_SECRET_KEY) => {
+export const saveVerifyEmailToken = async (token, userId, expires, blacklisted = false) => {
+	const tokenDoc = await VerifyEmail.create({
+		user: userId,
+		token: token,
+		expiresAt: expires.format(),
+		blacklisted: blacklisted
+	});
+	return tokenDoc;
+};
+
+export const generateToken = (userId, expires, secret) => {
 	const payload = {
 		sub: userId,
 		iat: moment().unix(),
-		exp: expires.unix(),
-		type: type
+		exp: expires.unix()
 	};
 	return jwt.sign(payload, secret);
 };
 
-export const verify = async (token) => {
+export const verify = async (token, secret) => {
 	try {
-		return jwt.verify(token, JWT_SECRET_KEY);
+		return jwt.verify(token, secret);
 	} catch (err) {
 		throw new APIError(err.message, 401, true);
 	}
 };
 
-export const verifyToken = async (token, type) => {
-	const payload = await verify(token);
-	const tokenDoc = await Token.findOne({ token: token, type: type, user: payload.sub, blacklisted: false });
+export const verifyRefreshToken = async (token) => {
+	const payload = await verify(token, JWT_REFRESH_TOKEN_SECRET);
+	const tokenDoc = await RefreshToken.findOne({ token: token, user: payload.sub, blacklisted: false });
+	if (!tokenDoc) {
+		throw new APIError('Token not found', 401, true);
+	}
+	return tokenDoc;
+};
+
+export const verifyEmailToken = async (token) => {
+	const payload = await verify(token, JWT_VERIFY_EMAIL_SECRET);
+	const tokenDoc = await VerifyEmail.findOne({ token: token, user: payload.sub, blacklisted: false });
 	if (!tokenDoc) {
 		throw new APIError('Token not found', 401, true);
 	}
@@ -43,12 +68,12 @@ export const verifyToken = async (token, type) => {
 };
 
 export const generateAuthTokens = async (user) => {
-	const accessTokenExpires = moment().add(JWT_ACCESS_EXPIRATION_MINUTES, 'minutes');
-	const accessToken = generateToken(user.id, accessTokenExpires, TOKEN_TYPES.ACCESS);
+	const accessTokenExpires = moment().add(JWT_ACCESS_TOKEN_EXPIRATION_MINUTES, 'minutes');
+	const accessToken = generateToken(user.id, accessTokenExpires, JWT_ACCESS_TOKEN_SECRET);
 
-	const refreshTokenExpires = moment().add(JWT_REFRESH_EXPIRATION_DAYS, 'days');
-	const refreshToken = generateToken(user.id, refreshTokenExpires, TOKEN_TYPES.REFRESH);
-	await saveToken(refreshToken, user.id, refreshTokenExpires, TOKEN_TYPES.REFRESH);
+	const refreshTokenExpires = moment().add(JWT_REFRESH_TOKEN_EXPIRATION_DAYS, 'days');
+	const refreshToken = generateToken(user.id, refreshTokenExpires, JWT_REFRESH_TOKEN_SECRET);
+	await saveRefreshToken(refreshToken, user.id, refreshTokenExpires);
 
 	return {
 		accessToken: {
@@ -60,4 +85,11 @@ export const generateAuthTokens = async (user) => {
 			expires: refreshTokenExpires.format()
 		}
 	};
+};
+
+export const generateVerifyEmailToken = async (user) => {
+	const expires = moment().add(JWT_VERIFY_EMAIL_EXPIRATION_MINUTES, 'minutes');
+	const verifyEmailToken = generateToken(user.id, expires, JWT_VERIFY_EMAIL_SECRET);
+	await saveVerifyEmailToken(verifyEmailToken, user.id, expires);
+	return verifyEmailToken;
 };

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import toJSON from './plugins/toJSONPlugin';
 
-const tokenSchema = mongoose.Schema(
+const refreshTokenSchema = mongoose.Schema(
 	{
 		user: {
 			type: mongoose.SchemaTypes.ObjectId,
@@ -13,18 +13,13 @@ const tokenSchema = mongoose.Schema(
 			required: true,
 			index: true
 		},
-		type: {
-			type: String,
-			enum: ['refresh', 'resetPassword', 'verifyEmail'],
-			required: true
-		},
-		expires: {
-			type: Date,
-			required: true
-		},
 		blacklisted: {
 			type: Boolean,
 			default: false
+		},
+		expiresAt: {
+			type: Date,
+			required: true
 		}
 	},
 	{
@@ -32,6 +27,6 @@ const tokenSchema = mongoose.Schema(
 	}
 );
 
-tokenSchema.plugin(toJSON);
+refreshTokenSchema.plugin(toJSON);
 
-export default mongoose.model('tokens', tokenSchema);
+export default mongoose.model('refreshtokens', refreshTokenSchema);
