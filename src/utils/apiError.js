@@ -1,5 +1,5 @@
-class ExtendableError extends Error {
-	constructor(message, status, isPublic) {
+class APIError extends Error {
+	constructor(message, status = 500, isPublic = false) {
 		super(message);
 		this.name = this.constructor.name;
 		this.message = message;
@@ -10,8 +10,4 @@ class ExtendableError extends Error {
 	}
 }
 
-export default class APIError extends ExtendableError {
-	constructor(message, status = 500, isPublic = false) {
-		super(message, status, isPublic);
-	}
-}
+export default APIError;

@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+
 dotenv.config();
 
 export const NODE_ENV = process.env.NODE_ENV || 'development';
@@ -22,11 +23,11 @@ export const JWT_VERIFY_EMAIL_EXPIRATION_MINUTES = process.env.JWT_VERIFY_EMAIL_
 export const JWT_RESET_PASSWORD_SECRET = process.env.JWT_RESET_PASSWORD_SECRET || 'de4thzone4';
 export const JWT_RESET_PASSWORD_EXPIRATION_MINUTES = process.env.JWT_RESET_PASSWORD_EXPIRATION_MINUTES || 30;
 
-export const SMTP_HOST = process.env.SMTP_HOST;
-export const SMTP_PORT = process.env.SMTP_PORT;
-export const SMTP_USERNAME = process.env.SMTP_USERNAME;
-export const SMTP_PASSWORD = process.env.SMTP_PASSWORD;
-export const EMAIL_FROM = process.env.EMAIL_FROM;
+export const SMTP_HOST = process.env.SMTP_HOST || '';
+export const SMTP_PORT = process.env.SMTP_PORT || '';
+export const SMTP_USERNAME = process.env.SMTP_USERNAME || '';
+export const SMTP_PASSWORD = process.env.SMTP_PASSWORD || '';
+export const EMAIL_FROM = process.env.EMAIL_FROM || '';
 
 export const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:777';
 

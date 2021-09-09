@@ -18,10 +18,10 @@ import * as userService from './userService';
 export const saveToken = async (token, userId, expires, type, blacklisted = false) => {
 	const tokenDoc = await Token.create({
 		user: userId,
-		token: token,
-		type: type,
+		token,
+		type,
 		expiresAt: expires.format(),
-		blacklisted: blacklisted
+		blacklisted
 	});
 	return tokenDoc;
 };
@@ -53,7 +53,7 @@ export const verifyToken = async (token, type) => {
 		secret = JWT_RESET_PASSWORD_SECRET;
 	}
 	const payload = await verify(token, secret);
-	const tokenDoc = await Token.findOne({ user: payload.sub, token: token, type: type, blacklisted: false });
+	const tokenDoc = await Token.findOne({ user: payload.sub, token, type, blacklisted: false });
 	if (!tokenDoc) {
 		throw new APIError('Token not found', 401, true);
 	}

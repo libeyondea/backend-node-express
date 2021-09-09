@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import paginate from './plugins/paginatePlugin';
 import bcrypt from 'bcryptjs';
+import paginate from './plugins/paginatePlugin';
 import toJSON from './plugins/toJSONPlugin';
 
 const userSchema = mongoose.Schema(

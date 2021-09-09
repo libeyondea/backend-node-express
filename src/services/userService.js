@@ -3,19 +3,23 @@ import User from '~/models/user';
 import Role from '~/models/role';
 
 export const getUsers = async (filters, options) => {
-	return await User.paginate(filters, options, ['firstName', 'lastName', 'userName']);
+	const users = await User.paginate(filters, options, ['firstName', 'lastName', 'userName']);
+	return users;
 };
 
 export const getUserById = async (id) => {
-	return await User.findById(id);
+	const user = await User.findById(id);
+	return user;
 };
 
 export const getUserByUserName = async (userName) => {
-	return await User.findOne({ userName });
+	const user = await User.findOne({ userName });
+	return user;
 };
 
 export const getUserByEmail = async (email) => {
-	return await User.findOne({ email });
+	const user = await User.findOne({ email });
+	return user;
 };
 
 export const createUser = async (body) => {
@@ -25,7 +29,7 @@ export const createUser = async (body) => {
 	if (await User.isEmailAlreadyExists(body.email)) {
 		throw new APIError('Email already exists', 400, true);
 	}
-	let roles = [];
+	const roles = [];
 	await Promise.all(
 		body.roles.map(async (rid) => {
 			if (await Role.findById(rid)) {
@@ -34,7 +38,8 @@ export const createUser = async (body) => {
 		})
 	);
 	body.roles = roles;
-	return await User.create(body);
+	const newUser = await User.create(body);
+	return newUser;
 };
 
 export const updateUserById = async (userId, body) => {
@@ -49,7 +54,7 @@ export const updateUserById = async (userId, body) => {
 		throw new APIError('Email already exists', 400, true);
 	}
 	if (body.roles) {
-		let roles = [];
+		const roles = [];
 		await Promise.all(
 			body.roles.map(async (rid) => {
 				if (await Role.findById(rid)) {
@@ -60,7 +65,8 @@ export const updateUserById = async (userId, body) => {
 		body.roles = roles;
 	}
 	Object.assign(user, body);
-	return await user.save();
+	const updateUser = await user.save();
+	return updateUser;
 };
 
 export const deleteUserById = async (userId) => {
@@ -68,5 +74,6 @@ export const deleteUserById = async (userId) => {
 	if (!user) {
 		throw new APIError('User not found', 404, true);
 	}
-	return await user.remove();
+	const deleteUser = await user.remove();
+	return deleteUser;
 };

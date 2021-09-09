@@ -9,7 +9,7 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (err, use
 	}
 	req.user = user;
 	if (requiredRights.length) {
-		let userRights = [];
+		const userRights = [];
 		const roles = await Role.find({ _id: { $in: user.roles } }).populate('permissions');
 		roles.forEach((i) => {
 			i.permissions.forEach((j) => {
@@ -24,7 +24,7 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (err, use
 			return reject(new APIError('Resource access denied', 403, true));
 		}
 	}
-	resolve();
+	return resolve();
 };
 
 const authenticate =

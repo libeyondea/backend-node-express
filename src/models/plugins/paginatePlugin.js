@@ -1,9 +1,9 @@
 const paginate = (schema) => {
-	schema.statics.paginate = async function (filters, options, searchFields = []) {
+	schema.statics.paginate = async function paginateFunc(filters, options, searchFields = []) {
 		const sortBy = options.sortBy ? options.sortBy : 'createdAt';
 		const sortDirection = options.sortDirection && options.sortDirection === 'asc' ? 'asc' : 'desc';
-		const page = options.page && parseInt(options.page) > 0 ? parseInt(options.page) : 1;
-		const limit = options.limit && parseInt(options.limit) > 0 ? parseInt(options.limit) : 10;
+		const page = options.page && parseInt(options.page, 10) > 0 ? parseInt(options.page, 10) : 1;
+		const limit = options.limit && parseInt(options.limit, 10) > 0 ? parseInt(options.limit, 10) : 10;
 		const skip = (page - 1) * limit;
 		const q = filters.q || '';
 		const searchFieldsArr = searchFields.map((f) => {

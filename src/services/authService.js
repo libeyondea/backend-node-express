@@ -1,6 +1,6 @@
+import httpStatus from 'http-status';
 import * as userService from './userService';
 import * as tokenService from './tokenService';
-import httpStatus from 'http-status';
 import APIError from '~/utils/apiError';
 import User from '~/models/user';
 import Role from '~/models/role';
@@ -26,7 +26,8 @@ export const signup = async (body) => {
 	if (role) {
 		body.roles = role.id;
 	}
-	return User.create(body);
+	const newUser = await User.create(body);
+	return newUser;
 };
 
 export const logout = async (refreshToken) => {

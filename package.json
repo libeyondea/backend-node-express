@@ -21,7 +21,6 @@
 		"joi": "^17.4.2",
 		"jsonwebtoken": "^8.5.1",
 		"lodash": "^4.17.21",
-		"lodashnpm": "^1.0.4",
 		"moment": "^2.29.1",
 		"mongoose": "^6.0.0",
 		"nodemailer": "^6.6.3",
@@ -34,10 +33,17 @@
 	"devDependencies": {
 		"@babel/cli": "^7.14.8",
 		"@babel/core": "^7.15.0",
+		"@babel/eslint-parser": "^7.15.4",
 		"@babel/node": "^7.14.9",
 		"@babel/plugin-transform-runtime": "^7.15.0",
 		"@babel/preset-env": "^7.15.0",
 		"babel-plugin-root-import": "^6.6.0",
-		"nodemon": "^2.0.12"
+		"eslint": "^7.32.0",
+		"eslint-config-airbnb-base": "^14.2.1",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-import": "^2.24.2",
+		"eslint-plugin-prettier": "^4.0.0",
+		"nodemon": "^2.0.12",
+		"prettier": "^2.4.0"
 	}
 }

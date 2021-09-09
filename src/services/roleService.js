@@ -1,5 +1,5 @@
-import Role from '~/models/role';
 import _ from 'lodash';
+import Role from '~/models/role';
 import Permission from '~/models/permission';
 import APIError from '~/utils/apiError';
 

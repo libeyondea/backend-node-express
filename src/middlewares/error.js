@@ -1,5 +1,5 @@
-import { NODE_ENV } from '~/config/env';
 import httpStatus from 'http-status';
+import { NODE_ENV } from '~/config/env';
 import logger from '~/config/logger';
 import APIError from '~/utils/apiError';
 
