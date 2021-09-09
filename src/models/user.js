@@ -67,6 +67,10 @@ userSchema.statics.isRoleAlreadyExists = async function (role, excludeUserId) {
 	return !!(await this.findOne({ roles: role, _id: { $ne: excludeUserId } }));
 };
 
+userSchema.methods.isPasswordMatch = async function (password) {
+	return bcrypt.compareSync(password, this.password);
+};
+
 userSchema.pre('save', async function (next) {
 	if (this.isModified('password')) {
 		const passwordGenSalt = bcrypt.genSaltSync(10);

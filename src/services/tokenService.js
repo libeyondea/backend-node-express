@@ -1,31 +1,25 @@
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
-import RefreshToken from '~/models/refreshToken';
+import Token from '~/models/token';
 import {
 	JWT_ACCESS_TOKEN_EXPIRATION_MINUTES,
 	JWT_REFRESH_TOKEN_EXPIRATION_DAYS,
 	JWT_REFRESH_TOKEN_SECRET,
 	JWT_ACCESS_TOKEN_SECRET,
 	JWT_VERIFY_EMAIL_EXPIRATION_MINUTES,
-	JWT_VERIFY_EMAIL_SECRET
+	JWT_VERIFY_EMAIL_SECRET,
+	JWT_RESET_PASSWORD_SECRET,
+	JWT_RESET_PASSWORD_EXPIRATION_MINUTES,
+	TOKEN_TYPES
 } from '~/config/env';
 import APIError from '~/utils/apiError';
-import VerifyEmail from '~/models/verifyEmail';
+import * as userService from './userService';
 
-export const saveRefreshToken = async (token, userId, expires, blacklisted = false) => {
-	const tokenDoc = await RefreshToken.create({
+export const saveToken = async (token, userId, expires, type, blacklisted = false) => {
+	const tokenDoc = await Token.create({
 		user: userId,
 		token: token,
-		expiresAt: expires.format(),
-		blacklisted: blacklisted
-	});
-	return tokenDoc;
-};
-
-export const saveVerifyEmailToken = async (token, userId, expires, blacklisted = false) => {
-	const tokenDoc = await VerifyEmail.create({
-		user: userId,
-		token: token,
+		type: type,
 		expiresAt: expires.format(),
 		blacklisted: blacklisted
 	});
@@ -49,18 +43,17 @@ export const verify = async (token, secret) => {
 	}
 };
 
-export const verifyRefreshToken = async (token) => {
-	const payload = await verify(token, JWT_REFRESH_TOKEN_SECRET);
-	const tokenDoc = await RefreshToken.findOne({ token: token, user: payload.sub, blacklisted: false });
-	if (!tokenDoc) {
-		throw new APIError('Token not found', 401, true);
+export const verifyToken = async (token, type) => {
+	let secret = '';
+	if (type === TOKEN_TYPES.REFRESH) {
+		secret = JWT_REFRESH_TOKEN_SECRET;
+	} else if (type === TOKEN_TYPES.VERIFY_EMAIL) {
+		secret = JWT_VERIFY_EMAIL_SECRET;
+	} else if (type === TOKEN_TYPES.RESET_PASSWORD) {
+		secret = JWT_RESET_PASSWORD_SECRET;
 	}
-	return tokenDoc;
-};
-
-export const verifyEmailToken = async (token) => {
-	const payload = await verify(token, JWT_VERIFY_EMAIL_SECRET);
-	const tokenDoc = await VerifyEmail.findOne({ token: token, user: payload.sub, blacklisted: false });
+	const payload = await verify(token, secret);
+	const tokenDoc = await Token.findOne({ user: payload.sub, token: token, type: type, blacklisted: false });
 	if (!tokenDoc) {
 		throw new APIError('Token not found', 401, true);
 	}
@@ -73,7 +66,7 @@ export const generateAuthTokens = async (user) => {
 
 	const refreshTokenExpires = moment().add(JWT_REFRESH_TOKEN_EXPIRATION_DAYS, 'days');
 	const refreshToken = generateToken(user.id, refreshTokenExpires, JWT_REFRESH_TOKEN_SECRET);
-	await saveRefreshToken(refreshToken, user.id, refreshTokenExpires);
+	await saveToken(refreshToken, user.id, refreshTokenExpires, TOKEN_TYPES.REFRESH);
 
 	return {
 		accessToken: {
@@ -90,6 +83,17 @@ export const generateAuthTokens = async (user) => {
 export const generateVerifyEmailToken = async (user) => {
 	const expires = moment().add(JWT_VERIFY_EMAIL_EXPIRATION_MINUTES, 'minutes');
 	const verifyEmailToken = generateToken(user.id, expires, JWT_VERIFY_EMAIL_SECRET);
-	await saveVerifyEmailToken(verifyEmailToken, user.id, expires);
+	await saveToken(verifyEmailToken, user.id, expires, TOKEN_TYPES.VERIFY_EMAIL);
 	return verifyEmailToken;
+};
+
+export const generateResetPasswordToken = async (email) => {
+	const user = await userService.getUserByEmail(email);
+	if (!user) {
+		throw new APIError('No users found with this email', 404);
+	}
+	const expires = moment().add(JWT_RESET_PASSWORD_EXPIRATION_MINUTES, 'minutes');
+	const resetPasswordToken = generateToken(user.id, expires, JWT_RESET_PASSWORD_SECRET);
+	await saveToken(resetPasswordToken, user.id, expires, TOKEN_TYPES.RESET_PASSWORD);
+	return resetPasswordToken;
 };

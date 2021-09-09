@@ -1,9 +1,11 @@
 import Permission from '~/models/permission';
 import Role from '~/models/role';
 import User from '~/models/user';
+import APIError from '~/utils/apiError';
 import * as authService from '~/services/authService';
 import * as tokenService from '~/services/tokenService';
 import * as emailService from '~/services/emailService';
+import * as userService from '~/services/userService';
 
 export const signup = async (req, res) => {
 	const user = await authService.signup(req.body);
@@ -58,8 +60,12 @@ export const refreshTokens = async (req, res) => {
 };
 
 export const sendVerificationEmail = async (req, res) => {
-	//const verifyEmailToken = await tokenService.generateVerifyEmailToken(req.user.id);
-	await emailService.sendVerificationEmail(req.user.email, 'THUCDAIK');
+	const user = await userService.getUserByEmail(req.user.email);
+	if (!!user.confirmed) {
+		throw new APIError('Email verified', 400, true);
+	}
+	const verifyEmailToken = await tokenService.generateVerifyEmailToken(req.user);
+	await emailService.sendVerificationEmail(req.user.email, verifyEmailToken);
 	return res.json({
 		success: true,
 		data: {}
@@ -68,6 +74,23 @@ export const sendVerificationEmail = async (req, res) => {
 
 export const verifyEmail = async (req, res) => {
 	await authService.verifyEmail(req.query.token);
+	return res.json({
+		success: true,
+		data: {}
+	});
+};
+
+export const forgotPassword = async (req, res) => {
+	const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
+	await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
+	return res.json({
+		success: true,
+		data: {}
+	});
+};
+
+export const resetPassword = async (req, res) => {
+	await authService.resetPassword(req.query.token, req.body.password);
 	return res.json({
 		success: true,
 		data: {}

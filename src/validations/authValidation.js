@@ -5,7 +5,7 @@ export const signup = {
 		firstName: Joi.string().trim().min(2).max(66).required(),
 		lastName: Joi.string().trim().min(2).max(66).required(),
 		userName: Joi.string().alphanum().min(6).max(66).required(),
-		email: Joi.string().required().email(),
+		email: Joi.string().email().required(),
 		password: Joi.string().trim().min(6).max(666).required()
 	})
 };
@@ -26,5 +26,26 @@ export const logout = {
 export const refreshTokens = {
 	body: Joi.object().keys({
 		refreshToken: Joi.string().required()
+	})
+};
+
+export const forgotPassword = {
+	body: Joi.object().keys({
+		email: Joi.string().email().required()
+	})
+};
+
+export const resetPassword = {
+	query: Joi.object().keys({
+		token: Joi.string().required()
+	}),
+	body: Joi.object().keys({
+		password: Joi.string().trim().min(6).max(666).required()
+	})
+};
+
+export const verifyEmail = {
+	query: Joi.object().keys({
+		token: Joi.string().required()
 	})
 };
