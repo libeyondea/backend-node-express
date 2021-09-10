@@ -1,7 +1,7 @@
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import passport from 'passport';
 import { JWT_ACCESS_TOKEN_SECRET } from './env';
-import * as userService from '~/services/userService';
+import User from '~/models/user';
 
 passport.use(
 	new JwtStrategy(
@@ -11,7 +11,7 @@ passport.use(
 		},
 		async (jwtPayload, done) => {
 			try {
-				const user = await userService.getUserById(jwtPayload.sub);
+				const user = await User.getUserById(jwtPayload.sub);
 				if (!user) {
 					return done(null, false);
 				}

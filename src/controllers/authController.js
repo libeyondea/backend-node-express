@@ -1,14 +1,13 @@
-import Permission from '~/models/permission';
-import Role from '~/models/role';
-import User from '~/models/user';
 import APIError from '~/utils/apiError';
-import * as authService from '~/services/authService';
 import * as tokenService from '~/services/tokenService';
 import * as emailService from '~/services/emailService';
-import * as userService from '~/services/userService';
+import User from '~/models/user';
+import { TOKEN_TYPES } from '~/config/env';
+import httpStatus from 'http-status';
+import Token from '~/models/token';
 
 export const signup = async (req, res) => {
-	const user = await authService.signup(req.body);
+	const user = await User.createUser(req.body);
 	const tokens = await tokenService.generateAuthTokens(user);
 	return res.json({
 		success: true,
@@ -18,7 +17,7 @@ export const signup = async (req, res) => {
 
 export const signin = async (req, res) => {
 	const { userName, password } = req.body;
-	const user = await authService.signinWithUserNameAndPassword(userName, password);
+	const user = await User.signinWithUserNameAndPassword(userName, password);
 	const tokens = await tokenService.generateAuthTokens(user);
 	return res.json({
 		success: true,
@@ -42,25 +41,35 @@ export const me = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-	await authService.logout(req.body.refreshToken);
+	await Token.revokeToken(req.body.refreshToken);
 	return res.json({
 		success: true,
-		data: {}
+		data: 'Logout success'
 	});
 };
 
 export const refreshTokens = async (req, res) => {
-	const tokens = await authService.refreshTokens(req.body.refreshToken);
-	return res.json({
-		success: true,
-		data: {
-			tokens
+	try {
+		const refreshTokenDoc = await tokenService.verifyToken(req.body.refreshToken, TOKEN_TYPES.REFRESH);
+		const user = await User.getUserById(refreshTokenDoc.user);
+		if (!user) {
+			throw new APIError(httpStatus[401], 401, true);
 		}
-	});
+		await refreshTokenDoc.remove();
+		const tokens = await tokenService.generateAuthTokens(user);
+		return res.json({
+			success: true,
+			data: {
+				tokens
+			}
+		});
+	} catch (err) {
+		throw new APIError('Refresh failed', 401, true);
+	}
 };
 
 export const sendVerificationEmail = async (req, res) => {
-	const user = await userService.getUserByEmail(req.user.email);
+	const user = await User.getUserByEmail(req.user.email);
 	if (user.confirmed) {
 		throw new APIError('Email verified', 400, true);
 	}
@@ -68,16 +77,26 @@ export const sendVerificationEmail = async (req, res) => {
 	await emailService.sendVerificationEmail(req.user.email, verifyEmailToken);
 	return res.json({
 		success: true,
-		data: {}
+		data: 'Send verification email success'
 	});
 };
 
 export const verifyEmail = async (req, res) => {
-	await authService.verifyEmail(req.query.token);
-	return res.json({
-		success: true,
-		data: {}
-	});
+	try {
+		const verifyEmailTokenDoc = await tokenService.verifyToken(req.query.token, TOKEN_TYPES.VERIFY_EMAIL);
+		const user = await User.getUserById(verifyEmailTokenDoc.user);
+		if (!user) {
+			throw new Error();
+		}
+		await Token.deleteMany({ user: user.id, type: TOKEN_TYPES.VERIFY_EMAIL });
+		await User.updateUserById(user.id, { confirmed: true });
+		return res.json({
+			success: true,
+			data: 'Verify email success'
+		});
+	} catch (err) {
+		throw new APIError('Email verification failed', 401, true);
+	}
 };
 
 export const forgotPassword = async (req, res) => {
@@ -85,114 +104,24 @@ export const forgotPassword = async (req, res) => {
 	await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
 	return res.json({
 		success: true,
-		data: {}
+		data: 'Send forgot password email success'
 	});
 };
 
 export const resetPassword = async (req, res) => {
-	await authService.resetPassword(req.query.token, req.body.password);
-	return res.json({
-		success: true,
-		data: {}
-	});
-};
-
-export const setup = async (req, res) => {
-	const permissionUserCreate = await Permission.create({
-		controller: 'user',
-		action: 'create'
-	});
-	const permissionUserRead = await Permission.create({
-		controller: 'user',
-		action: 'read'
-	});
-	const permissionUserUpdate = await Permission.create({
-		controller: 'user',
-		action: 'update'
-	});
-	const permissionUserDelete = await Permission.create({
-		controller: 'user',
-		action: 'delete'
-	});
-
-	const permissionRoleCreate = await Permission.create({
-		controller: 'role',
-		action: 'create'
-	});
-	const permissionRoleRead = await Permission.create({
-		controller: 'role',
-		action: 'read'
-	});
-	const permissionRoleUpdate = await Permission.create({
-		controller: 'role',
-		action: 'update'
-	});
-	const permissionRoleDelete = await Permission.create({
-		controller: 'role',
-		action: 'delete'
-	});
-
-	const roleSuperAdministrator = await Role.create({
-		name: 'Super Administrator',
-		permissions: [
-			permissionUserCreate.id,
-			permissionUserRead.id,
-			permissionUserUpdate.id,
-			permissionUserDelete.id,
-			permissionRoleCreate.id,
-			permissionRoleRead.id,
-			permissionRoleUpdate.id,
-			permissionRoleDelete.id
-		]
-	});
-	const roleAdministrator = await Role.create({
-		name: 'Administrator',
-		permissions: [permissionUserCreate.id, permissionUserRead.id, permissionUserUpdate.id, permissionUserDelete.id]
-	});
-	const roleModerator = await Role.create({
-		name: 'Moderator',
-		permissions: [permissionUserCreate.id, permissionUserRead.id, permissionUserUpdate.id]
-	});
-	const roleUser = await Role.create({
-		name: 'User',
-		permissions: []
-	});
-
-	await User.create({
-		firstName: 'Thuc',
-		lastName: 'Nguyen',
-		userName: 'superadmin',
-		email: 'superadmin@example.com',
-		password: 'superadmin',
-		roles: [roleSuperAdministrator.id, roleAdministrator.id, roleModerator.id]
-	});
-	await User.create({
-		firstName: 'Vy',
-		lastName: 'Nguyen',
-		userName: 'admin',
-		email: 'admin@example.com',
-		password: 'admin',
-		roles: [roleAdministrator.id]
-	});
-	await User.create({
-		firstName: 'Thuyen',
-		lastName: 'Nguyen',
-		userName: 'moderator',
-		email: 'moderator@example.com',
-		password: 'moderator',
-		roles: [roleModerator.id]
-	});
-	await User.create({
-		firstName: 'Uyen',
-		lastName: 'Nguyen',
-		userName: 'user',
-		email: 'user@example.com',
-		password: 'user',
-		roles: [roleUser.id]
-	});
-
-	return res.json({
-		success: true,
-		data: 'Setup succes'
-	});
+	try {
+		const resetPasswordTokenDoc = await tokenService.verifyToken(req.query.token, TOKEN_TYPES.RESET_PASSWORD);
+		const user = await User.getUserById(resetPasswordTokenDoc.user);
+		if (!user) {
+			throw new Error();
+		}
+		await Token.deleteMany({ user: user.id, type: TOKEN_TYPES.RESET_PASSWORD });
+		await User.updateUserById(user.id, { password: req.body.password });
+		return res.json({
+			success: true,
+			data: 'Reset password success'
+		});
+	} catch (err) {
+		throw new APIError('Password reset failed', 401, true);
+	}
 };

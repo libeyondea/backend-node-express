@@ -2,6 +2,10 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import paginate from './plugins/paginatePlugin';
 import toJSON from './plugins/toJSONPlugin';
+import APIError from '~/utils/apiError';
+import Role from './role';
+import { TOKEN_TYPES } from '~/config/env';
+import Token from './token';
 
 const userSchema = mongoose.Schema(
 	{
@@ -51,25 +55,117 @@ const userSchema = mongoose.Schema(
 userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
 
-userSchema.statics.isUserNameAlreadyExists = async function (userName, excludeUserId) {
-	return !!(await this.findOne({ userName, _id: { $ne: excludeUserId } }));
-};
+class UserClass {
+	static async isUserNameAlreadyExists(userName, excludeUserId) {
+		return !!(await this.findOne({ userName, _id: { $ne: excludeUserId } }));
+	}
 
-userSchema.statics.isEmailAlreadyExists = async function (email, excludeUserId) {
-	return !!(await this.findOne({ email, _id: { $ne: excludeUserId } }));
-};
+	static async isEmailAlreadyExists(email, excludeUserId) {
+		return !!(await this.findOne({ email, _id: { $ne: excludeUserId } }));
+	}
 
-userSchema.methods.isPasswordMatch = async function (password) {
-	return bcrypt.compareSync(password, this.password);
-};
+	static async isRoleIdAlreadyExists(roleId, excludeUserId) {
+		return !!(await this.findOne({ roles: roleId, _id: { $ne: excludeUserId } }));
+	}
 
-userSchema.statics.isRoleAlreadyExists = async function (role, excludeUserId) {
-	return !!(await this.findOne({ roles: role, _id: { $ne: excludeUserId } }));
-};
+	static async getUserById(id) {
+		return await this.findById(id);
+	}
 
-userSchema.methods.isPasswordMatch = async function (password) {
-	return bcrypt.compareSync(password, this.password);
-};
+	static async getUserByUserName(userName) {
+		return await this.findOne({ userName });
+	}
+
+	static async getUserByEmail(email) {
+		return await this.findOne({ email });
+	}
+
+	static async signinWithUserNameAndPassword(userName, password) {
+		const user = await this.getUserByUserName(userName);
+		if (!user || !(await user.isPasswordMatch(password))) {
+			throw new APIError('Incorrect user name or password', 400, true);
+		}
+		return user;
+	}
+
+	/* static async signup(body) {
+		if (await this.isUserNameAlreadyExists(body.userName)) {
+			throw new APIError('User name already exists', 400, true);
+		}
+		if (await this.isEmailAlreadyExists(body.email)) {
+			throw new APIError('Email already exists', 400, true);
+		}
+		const role = await Role.getRoleByName('User');
+		if (role) {
+			body.roles = role.id;
+		}
+		return await this.create(body);
+	} */
+
+	static async createUser(body) {
+		if (await this.isUserNameAlreadyExists(body.userName)) {
+			throw new APIError('User name already exists', 400, true);
+		}
+		if (await this.isEmailAlreadyExists(body.email)) {
+			throw new APIError('Email already exists', 400, true);
+		}
+		if (body.roles) {
+			const roles = [];
+			await Promise.all(
+				body.roles.map(async (rid) => {
+					if (await Role.findById(rid)) {
+						roles.push(rid);
+					}
+				})
+			);
+			body.roles = roles;
+		} else {
+			const role = await Role.getRoleByName('User');
+			body.roles = role.id;
+		}
+		return await this.create(body);
+	}
+
+	static async updateUserById(userId, body) {
+		const user = await this.getUserById(userId);
+		if (!user) {
+			throw new APIError('User not found', 404, true);
+		}
+		if (await this.isUserNameAlreadyExists(body.userName, userId)) {
+			throw new APIError('User name already exists', 400, true);
+		}
+		if (await this.isEmailAlreadyExists(body.email, userId)) {
+			throw new APIError('Email already exists', 400, true);
+		}
+		if (body.roles) {
+			const roles = [];
+			await Promise.all(
+				body.roles.map(async (rid) => {
+					if (await Role.findById(rid)) {
+						roles.push(rid);
+					}
+				})
+			);
+			body.roles = roles;
+		}
+		Object.assign(user, body);
+		return await user.save();
+	}
+
+	static async deleteUserById(userId) {
+		const user = await this.getUserById(userId);
+		if (!user) {
+			throw new APIError('User not found', 404, true);
+		}
+		return await user.remove();
+	}
+
+	isPasswordMatch(password) {
+		return bcrypt.compareSync(password, this.password);
+	}
+}
+
+userSchema.loadClass(UserClass);
 
 userSchema.pre('save', async function (next) {
 	if (this.isModified('password')) {
