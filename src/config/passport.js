@@ -1,7 +1,7 @@
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import passport from 'passport';
 import { JWT_ACCESS_TOKEN_SECRET } from './env';
-import User from '~/models/user';
+import User from '~/models/userModel';
 
 passport.use(
 	new JwtStrategy(

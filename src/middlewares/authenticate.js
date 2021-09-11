@@ -1,7 +1,7 @@
 import passport from 'passport';
 import httpStatus from 'http-status';
 import APIError from '~/utils/apiError';
-import Role from '~/models/role';
+import Role from '~/models/roleModel';
 
 const verifyCallback = (req, resolve, reject, requiredRights) => async (err, user, info) => {
 	if (err || info || !user) {

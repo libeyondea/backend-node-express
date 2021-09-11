@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import APIError from '~/utils/apiError';
 import paginate from './plugins/paginatePlugin';
 import toJSON from './plugins/toJSONPlugin';
-import Permission from './permission';
+import Permission from './permissionModel';
 
 const roleSchema = mongoose.Schema(
 	{

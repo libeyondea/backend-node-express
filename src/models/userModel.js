@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import paginate from './plugins/paginatePlugin';
 import toJSON from './plugins/toJSONPlugin';
 import APIError from '~/utils/apiError';
-import Role from './role';
+import Role from './roleModel';
 
 const userSchema = mongoose.Schema(
 	{

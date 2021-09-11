@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import APIError from '~/utils/apiError';
-import User from '~/models/user';
-import Role from '~/models/role';
+import User from '~/models/userModel';
+import Role from '~/models/roleModel';
 
 export const createUser = async (req, res) => {
 	const user = await User.createUser(req.body);

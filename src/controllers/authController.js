@@ -1,11 +1,11 @@
 import APIError from '~/utils/apiError';
 import * as tokenService from '~/services/tokenService';
 import * as emailService from '~/services/emailService';
-import User from '~/models/user';
+import User from '~/models/userModel';
 import { TOKEN_TYPES } from '~/config/env';
 import httpStatus from 'http-status';
-import Token from '~/models/token';
-import Role from '~/models/role';
+import Token from '~/models/tokenModel';
+import Role from '~/models/roleModel';
 
 export const signup = async (req, res) => {
 	const role = await Role.getRoleByName('User');

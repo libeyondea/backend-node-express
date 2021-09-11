@@ -2,9 +2,9 @@ import mongoose from 'mongoose';
 import { DATABASE_URI, HOST, PORT } from '~/config/env';
 import app from '~/config/express';
 import logger from './config/logger';
-import Permission from './models/permission';
-import Role from './models/role';
-import User from './models/user';
+import Permission from './models/permissionModel';
+import Role from './models/roleModel';
+import User from './models/userModel';
 
 let server;
 

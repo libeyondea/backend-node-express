@@ -11,8 +11,8 @@ import {
 	TOKEN_TYPES
 } from '~/config/env';
 import APIError from '~/utils/apiError';
-import User from '~/models/user';
-import Token from '~/models/token';
+import User from '~/models/userModel';
+import Token from '~/models/tokenModel';
 import * as jwtService from './jwtService';
 
 export const verifyToken = async (token, type) => {
