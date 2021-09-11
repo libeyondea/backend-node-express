@@ -48,15 +48,17 @@ class TokenClass {
 		return tokenDoc;
 	}
 
-	static async revokeToken(refreshToken) {
-		const refreshTokenDoc = await this.findOne({ token: refreshToken, type: TOKEN_TYPES.REFRESH, blacklisted: false });
-		if (!refreshTokenDoc) {
+	static async revokeToken(token, type) {
+		const tokenDoc = await this.findOne({ token: token, type: type, blacklisted: false });
+		if (!tokenDoc) {
 			throw new APIError('Token not found', 400, true);
 		}
-		await refreshTokenDoc.remove();
+		await tokenDoc.remove();
 	}
 }
 
 tokenSchema.loadClass(TokenClass);
 
-export default mongoose.model('tokens', tokenSchema);
+const Token = mongoose.model('tokens', tokenSchema);
+
+export default Token;
