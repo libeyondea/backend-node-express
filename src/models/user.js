@@ -72,6 +72,10 @@ class UserClass {
 		return await this.findById(id);
 	}
 
+	static async getUserByIdWithRoles(id) {
+		return await this.findById(id).populate({ path: 'roles', select: 'name description createdAt updatedAt' });
+	}
+
 	static async getUserByUserName(userName) {
 		return await this.findOne({ userName });
 	}
@@ -88,20 +92,6 @@ class UserClass {
 		return user;
 	}
 
-	/* static async signup(body) {
-		if (await this.isUserNameAlreadyExists(body.userName)) {
-			throw new APIError('User name already exists', 400, true);
-		}
-		if (await this.isEmailAlreadyExists(body.email)) {
-			throw new APIError('Email already exists', 400, true);
-		}
-		const role = await Role.getRoleByName('User');
-		if (role) {
-			body.roles = role.id;
-		}
-		return await this.create(body);
-	} */
-
 	static async createUser(body) {
 		if (await this.isUserNameAlreadyExists(body.userName)) {
 			throw new APIError('User name already exists', 400, true);
@@ -109,7 +99,11 @@ class UserClass {
 		if (await this.isEmailAlreadyExists(body.email)) {
 			throw new APIError('Email already exists', 400, true);
 		}
-		if (body.roles) {
+
+		if (!body.roles) {
+			const role = await Role.getRoleByName('User');
+			body.roles = role.id;
+		} else {
 			const roles = [];
 			await Promise.all(
 				body.roles.map(async (rid) => {
@@ -119,9 +113,6 @@ class UserClass {
 				})
 			);
 			body.roles = roles;
-		} else {
-			const role = await Role.getRoleByName('User');
-			body.roles = role.id;
 		}
 		return await this.create(body);
 	}
@@ -160,7 +151,7 @@ class UserClass {
 		return await user.remove();
 	}
 
-	isPasswordMatch(password) {
+	async isPasswordMatch(password) {
 		return bcrypt.compareSync(password, this.password);
 	}
 }

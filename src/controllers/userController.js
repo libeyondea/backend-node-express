@@ -25,7 +25,7 @@ export const getUsers = async (req, res) => {
 };
 
 export const getUser = async (req, res) => {
-	const user = await User.getUserById(req.params.userId, 'roles');
+	const user = await User.getUserByIdWithRoles(req.params.userId);
 	if (!user) {
 		throw new APIError('User not found', 404, true);
 	}
@@ -55,6 +55,6 @@ export const deleteUser = async (req, res) => {
 	await User.deleteUserById(req.params.userId);
 	return res.json({
 		success: true,
-		data: {}
+		data: 'Delete user success'
 	});
 };

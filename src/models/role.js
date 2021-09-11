@@ -47,7 +47,7 @@ class RoleClass {
 		if (await this.isNameAlreadyExists(body.name)) {
 			throw new APIError('Name already exists', 400, true);
 		}
-		if (body.permissions && body.permissions.length) {
+		if (body.permissions) {
 			let permissions = [];
 			await Promise.all(
 				body.permissions.map(async (pid) => {
@@ -69,7 +69,7 @@ class RoleClass {
 		if (await this.isNameAlreadyExists(body.name, roleId)) {
 			throw new APIError('Name already exists', 400, true);
 		}
-		if (body.permissions && body.permissions.length) {
+		if (body.permissions) {
 			let permissions = [];
 			await Promise.all(
 				body.permissions.map(async (pid) => {
