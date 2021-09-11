@@ -5,8 +5,11 @@ import User from '~/models/user';
 import { TOKEN_TYPES } from '~/config/env';
 import httpStatus from 'http-status';
 import Token from '~/models/token';
+import Role from '~/models/role';
 
 export const signup = async (req, res) => {
+	const role = await Role.getRoleByName('User');
+	req.body.roles = [role.id];
 	const user = await User.createUser(req.body);
 	const tokens = await tokenService.generateAuthTokens(user);
 	return res.json({
@@ -16,8 +19,10 @@ export const signup = async (req, res) => {
 };
 
 export const signin = async (req, res) => {
-	const { userName, password } = req.body;
-	const user = await User.signinWithUserNameAndPassword(userName, password);
+	const user = await User.getUserByUserName(req.body.userName);
+	if (!user || !(await user.isPasswordMatch(req.body.password))) {
+		throw new APIError('Incorrect user name or password', 400, true);
+	}
 	const tokens = await tokenService.generateAuthTokens(user);
 	return res.json({
 		success: true,
@@ -26,22 +31,18 @@ export const signin = async (req, res) => {
 };
 
 export const me = async (req, res) => {
+	const user = await User.getUserByIdWithRoles(req.user.id);
+	if (!user) {
+		throw new APIError('User not found', 404, true);
+	}
 	return res.json({
 		success: true,
-		data: {
-			id: req.user.id,
-			firstName: req.user.firstName,
-			lastName: req.user.lastName,
-			userName: req.user.userName,
-			email: req.user.email,
-			avatar: req.user.avatar,
-			role: req.user.role
-		}
+		data: user
 	});
 };
 
 export const logout = async (req, res) => {
-	await Token.revokeToken(req.body.refreshToken);
+	await Token.revokeToken(req.body.refreshToken, TOKEN_TYPES.REFRESH);
 	return res.json({
 		success: true,
 		data: 'Logout success'
@@ -53,7 +54,7 @@ export const refreshTokens = async (req, res) => {
 		const refreshTokenDoc = await tokenService.verifyToken(req.body.refreshToken, TOKEN_TYPES.REFRESH);
 		const user = await User.getUserById(refreshTokenDoc.user);
 		if (!user) {
-			throw new APIError(httpStatus[401], 401, true);
+			throw new Error();
 		}
 		await refreshTokenDoc.remove();
 		const tokens = await tokenService.generateAuthTokens(user);
