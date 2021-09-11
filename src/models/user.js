@@ -4,8 +4,6 @@ import paginate from './plugins/paginatePlugin';
 import toJSON from './plugins/toJSONPlugin';
 import APIError from '~/utils/apiError';
 import Role from './role';
-import { TOKEN_TYPES } from '~/config/env';
-import Token from './token';
 
 const userSchema = mongoose.Schema(
 	{
@@ -84,14 +82,6 @@ class UserClass {
 		return await this.findOne({ email });
 	}
 
-	static async signinWithUserNameAndPassword(userName, password) {
-		const user = await this.getUserByUserName(userName);
-		if (!user || !(await user.isPasswordMatch(password))) {
-			throw new APIError('Incorrect user name or password', 400, true);
-		}
-		return user;
-	}
-
 	static async createUser(body) {
 		if (await this.isUserNameAlreadyExists(body.userName)) {
 			throw new APIError('User name already exists', 400, true);
@@ -99,20 +89,14 @@ class UserClass {
 		if (await this.isEmailAlreadyExists(body.email)) {
 			throw new APIError('Email already exists', 400, true);
 		}
-
-		if (!body.roles) {
-			const role = await Role.getRoleByName('User');
-			body.roles = role.id;
-		} else {
-			const roles = [];
+		if (body.roles) {
 			await Promise.all(
 				body.roles.map(async (rid) => {
-					if (await Role.findById(rid)) {
-						roles.push(rid);
+					if (!(await Role.findById(rid))) {
+						throw new APIError('Roles not exist', 400, true);
 					}
 				})
 			);
-			body.roles = roles;
 		}
 		return await this.create(body);
 	}
@@ -129,15 +113,13 @@ class UserClass {
 			throw new APIError('Email already exists', 400, true);
 		}
 		if (body.roles) {
-			const roles = [];
 			await Promise.all(
 				body.roles.map(async (rid) => {
-					if (await Role.findById(rid)) {
-						roles.push(rid);
+					if (!(await Role.findById(rid))) {
+						throw new APIError('Roles not exist', 400, true);
 					}
 				})
 			);
-			body.roles = roles;
 		}
 		Object.assign(user, body);
 		return await user.save();
@@ -166,4 +148,6 @@ userSchema.pre('save', async function (next) {
 	next();
 });
 
-export default mongoose.model('users', userSchema);
+const User = mongoose.model('users', userSchema);
+
+export default User;
