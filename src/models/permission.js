@@ -25,4 +25,6 @@ permissionSchema.index({ controller: 1, action: 1 }, { unique: true });
 
 permissionSchema.plugin(toJSON);
 
-export default mongoose.model('permissions', permissionSchema);
+const Permission = mongoose.model('permissions', permissionSchema);
+
+export default Permission;
