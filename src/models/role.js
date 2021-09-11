@@ -48,15 +48,13 @@ class RoleClass {
 			throw new APIError('Name already exists', 400, true);
 		}
 		if (body.permissions) {
-			let permissions = [];
 			await Promise.all(
 				body.permissions.map(async (pid) => {
-					if (await Permission.findById(pid)) {
-						permissions.push(pid);
+					if (!(await Permission.findById(pid))) {
+						throw new APIError('Permissions not exist', 400, true);
 					}
 				})
 			);
-			body.permissions = permissions;
 		}
 		return await this.create(body);
 	}
@@ -70,15 +68,13 @@ class RoleClass {
 			throw new APIError('Name already exists', 400, true);
 		}
 		if (body.permissions) {
-			let permissions = [];
 			await Promise.all(
 				body.permissions.map(async (pid) => {
-					if (await Permission.findById(pid)) {
-						permissions.push(pid);
+					if (!(await Permission.findById(pid))) {
+						throw new APIError('Permissions not exist', 400, true);
 					}
 				})
 			);
-			body.permissions = permissions;
 		}
 		Object.assign(role, body);
 		return await role.save();
@@ -95,4 +91,6 @@ class RoleClass {
 
 roleSchema.loadClass(RoleClass);
 
-export default mongoose.model('roles', roleSchema);
+const Role = mongoose.model('roles', roleSchema);
+
+export default Role;
