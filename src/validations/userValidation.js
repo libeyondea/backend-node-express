@@ -8,7 +8,8 @@ export const createUser = {
 		userName: Joi.string().alphanum().min(6).max(66).required(),
 		email: Joi.string().required().email(),
 		password: Joi.string().trim().min(6).max(666).required(),
-		roles: Joi.array().items(Joi.string().custom(mongoId)).min(1).max(6).unique().required()
+		roles: Joi.array().items(Joi.string().custom(mongoId)).min(1).max(6).unique().required(),
+		avatar: Joi.string().max(666)
 	})
 };
 
@@ -38,7 +39,8 @@ export const updateUser = {
 		userName: Joi.string().alphanum().min(6).max(66),
 		email: Joi.string().email(),
 		password: Joi.string().trim().min(6).max(666),
-		roles: Joi.array().items(Joi.string().custom(mongoId)).min(1).max(6).unique()
+		roles: Joi.array().items(Joi.string().custom(mongoId)).min(1).max(6).unique(),
+		avatar: Joi.string().max(666)
 	})
 };
 
