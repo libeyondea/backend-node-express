@@ -167,7 +167,7 @@ mongoose
 const exitHandler = () => {
 	if (server) {
 		server.close(() => {
-			logger.info('Server closed');
+			logger.warn('Server closed');
 			process.exit(1);
 		});
 	} else {
@@ -175,8 +175,8 @@ const exitHandler = () => {
 	}
 };
 
-const unexpectedErrorHandler = (error) => {
-	logger.error(error);
+const unexpectedErrorHandler = (err) => {
+	logger.error(err);
 	exitHandler();
 };
 
