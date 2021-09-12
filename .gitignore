@@ -9,3 +9,6 @@
 
 #log
 /logs
+
+# images
+/public/images
