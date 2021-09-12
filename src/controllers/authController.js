@@ -30,11 +30,19 @@ export const signin = async (req, res) => {
 	});
 };
 
-export const me = async (req, res) => {
+export const getMe = async (req, res) => {
 	const user = await User.getUserByIdWithRoles(req.user.id);
 	if (!user) {
 		throw new APIError('User not found', 404, true);
 	}
+	return res.json({
+		success: true,
+		data: user
+	});
+};
+
+export const updateMe = async (req, res) => {
+	const user = await User.updateUserById(req.user.id, req.body);
 	return res.json({
 		success: true,
 		data: user
