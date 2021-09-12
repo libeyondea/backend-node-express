@@ -85,7 +85,7 @@ FRONTEND_URL =
 ## Project Structure
 
 ```
-public\				# Public folder
+public\             # Public folder
 src\
  |--config\         # Environment variables and configuration
  |--controllers\    # Controllers
