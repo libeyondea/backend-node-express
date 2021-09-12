@@ -103,33 +103,33 @@ src\
 List of available routes:
 
 **Auth routes**:\
-`POST api/v1/auth/signup` - signup\
-`POST api/v1/auth/signin` - signin\
-`POST api/v1/auth/logout` - logout\
-`POST api/v1/auth/refresh-tokens` - refresh auth tokens\
-`POST api/v1/auth/forgot-password` - send reset password email\
-`POST api/v1/auth/reset-password` - reset password\
-`POST api/v1/auth/send-verification-email` - send verification email\
-`POST api/v1/auth/verify-email` - verify email\
+`POST api/v1/auth/signup` - Signup\
+`POST api/v1/auth/signin` - Signin\
+`POST api/v1/auth/logout` - Logout\
+`POST api/v1/auth/refresh-tokens` - Refresh auth tokens\
+`POST api/v1/auth/forgot-password` - Send reset password email\
+`POST api/v1/auth/reset-password` - Reset password\
+`POST api/v1/auth/send-verification-email` - Send verification email\
+`POST api/v1/auth/verify-email` - Verify email\
 `POST api/v1/auth/me` - Profile\
 `PUT api/v1/auth/me` - Update profile
 
 **User routes**:\
-`POST api/v1/users` - create a user\
-`GET api/v1/users` - get all users\
-`GET api/v1/users/:userId` - get user\
-`PATCH api/v1/users/:userId` - update user\
-`DELETE api/v1/users/:userId` - delete user
+`POST api/v1/users` - Create a user\
+`GET api/v1/users` - Get all users\
+`GET api/v1/users/:userId` - Get user\
+`PUT api/v1/users/:userId` - Update user\
+`DELETE api/v1/users/:userId` - Delete user
 
-**Roles routes**:\
-`POST api/v1/roles` - create a role\
-`GET api/v1/roles` - get all roles\
-`GET api/v1/roles/:userId` - get role\
-`PUT api/v1/roles/:userId` - update role\
-`DELETE api/v1/roles/:userId` - delete role
+**Role routes**:\
+`POST api/v1/roles` - Create a role\
+`GET api/v1/roles` - Get all roles\
+`GET api/v1/roles/:userId` - Get role\
+`PUT api/v1/roles/:userId` - Update role\
+`DELETE api/v1/roles/:userId` - Delete role
 
-**Images routes**:\
-`POST api/v1/images/upload` - upload image
+**Image routes**:\
+`POST api/v1/images/upload` - Upload image
 
 ## License
 
