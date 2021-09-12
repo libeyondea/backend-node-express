@@ -16,7 +16,9 @@ export const notFound = (req, res, next) => {
 };
 
 export const handler = (err, req, res, next) => {
-	logger.error(`${err.status} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+	if (NODE_ENV === 'development') {
+		logger.error(err);
+	}
 	return res.status(err.status).json({
 		errors: err.isPublic ? err.message : httpStatus[err.status],
 		...(NODE_ENV === 'development' && { stack: err.stack })
