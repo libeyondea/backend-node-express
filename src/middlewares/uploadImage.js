@@ -25,7 +25,7 @@ const upload = multer({
 	fileFilter: (req, file, callback) => {
 		var ext = path.extname(file.originalname);
 		if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
-			return callback(new APIError('File image unsupported', 400, true));
+			return callback(new APIError('File image unsupported', 400));
 		}
 		callback(null, true);
 	}
@@ -34,7 +34,7 @@ const upload = multer({
 const uploadImage = (req, res, next) => {
 	upload(req, res, (err) => {
 		if (err instanceof multer.MulterError) {
-			return next(new APIError(err.message, 400, true));
+			return next(new APIError(err.message, 400));
 		} else if (err) {
 			return next(err);
 		}

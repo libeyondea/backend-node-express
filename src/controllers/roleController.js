@@ -14,7 +14,7 @@ export const createRole = async (req, res) => {
 export const getRole = async (req, res) => {
 	const role = await Role.getRoleById(req.params.roleId);
 	if (!role) {
-		throw new APIError('Role not found', 404, true);
+		throw new APIError('Role not found', 404);
 	}
 	return res.json({
 		success: true,
@@ -45,7 +45,7 @@ export const getRoles = async (req, res) => {
 
 export const deleteRole = async (req, res) => {
 	if (await User.isRoleIdAlreadyExists(req.params.roleId)) {
-		throw new APIError('A role cannot be deleted if associated with users', 400, true);
+		throw new APIError('A role cannot be deleted if associated with users', 400);
 	}
 	await Role.deleteRoleById(req.params.roleId);
 	return res.json({

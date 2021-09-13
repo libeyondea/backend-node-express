@@ -51,7 +51,7 @@ class TokenClass {
 	static async revokeToken(token, type) {
 		const tokenDoc = await this.findOne({ token: token, type: type, blacklisted: false });
 		if (!tokenDoc) {
-			throw new APIError('Token not found', 400, true);
+			throw new APIError('Token not found', 400);
 		}
 		await tokenDoc.remove();
 	}

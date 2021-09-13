@@ -11,7 +11,7 @@ export const sign = (userId, expires, secret) => {
 		};
 		return jwt.sign(payload, secret);
 	} catch (err) {
-		throw new APIError(err.message, 401, true);
+		throw new APIError(err.message, 401);
 	}
 };
 
@@ -19,6 +19,6 @@ export const verify = async (token, secret) => {
 	try {
 		return jwt.verify(token, secret);
 	} catch (err) {
-		throw new APIError(err.message, 401, true);
+		throw new APIError(err.message, 401);
 	}
 };

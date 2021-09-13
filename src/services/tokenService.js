@@ -27,7 +27,7 @@ export const verifyToken = async (token, type) => {
 	const payload = await jwtService.verify(token, secret);
 	const tokenDoc = await Token.findOne({ user: payload.sub, token, type, blacklisted: false });
 	if (!tokenDoc) {
-		throw new APIError('Token not found', 401, true);
+		throw new APIError('Token not found', 401);
 	}
 	return tokenDoc;
 };

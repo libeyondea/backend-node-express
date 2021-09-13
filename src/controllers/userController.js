@@ -27,7 +27,7 @@ export const getUsers = async (req, res) => {
 export const getUser = async (req, res) => {
 	const user = await User.getUserByIdWithRoles(req.params.userId);
 	if (!user) {
-		throw new APIError('User not found', 404, true);
+		throw new APIError('User not found', 404);
 	}
 	return res.json({
 		success: true,
@@ -38,7 +38,7 @@ export const getUser = async (req, res) => {
 export const updateUser = async (req, res) => {
 	const role = await Role.getRoleByName('Super Administrator');
 	if (req.body.roles && !(await User.isRoleIdAlreadyExists(role.id, req.params.userId)) && !req.body.roles.includes(role.id)) {
-		throw new APIError('Requires at least 1 user as Super Administrator', 400, true);
+		throw new APIError('Requires at least 1 user as Super Administrator', 400);
 	}
 	const user = await User.updateUserById(req.params.userId, req.body);
 	return res.json({
@@ -50,7 +50,7 @@ export const updateUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
 	const role = await Role.getRoleByName('Super Administrator');
 	if (!(await User.isRoleIdAlreadyExists(role.id, req.params.userId))) {
-		throw new APIError('Requires at least 1 user as Super Administrator', 400, true);
+		throw new APIError('Requires at least 1 user as Super Administrator', 400);
 	}
 	await User.deleteUserById(req.params.userId);
 	return res.json({

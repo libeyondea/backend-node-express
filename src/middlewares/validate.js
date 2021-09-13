@@ -16,7 +16,7 @@ const validate = (schema) => (req, res, next) => {
 				locationType: d.path[0]
 			};
 		});
-		return next(new APIError(errorMessage, 400, true));
+		return next(new APIError(errorMessage, 400));
 	}
 	Object.assign(req, value);
 	return next();

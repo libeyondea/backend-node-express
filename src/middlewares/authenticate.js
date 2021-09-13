@@ -5,7 +5,7 @@ import Role from '~/models/roleModel';
 
 const verifyCallback = (req, resolve, reject, requiredRights) => async (err, user, info) => {
 	if (err || info || !user) {
-		return reject(new APIError(httpStatus[401], 401, true));
+		return reject(new APIError(httpStatus[401], 401));
 	}
 	req.user = user;
 	if (requiredRights.length) {
@@ -21,7 +21,7 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (err, use
 		console.log('userRights: ', userRights);
 		console.log('boolean: ', hasRequiredRights);
 		if (!hasRequiredRights) {
-			return reject(new APIError('Resource access denied', 403, true));
+			return reject(new APIError('Resource access denied', 403));
 		}
 	}
 	return resolve();

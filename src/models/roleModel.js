@@ -45,13 +45,13 @@ class RoleClass {
 
 	static async createRole(body) {
 		if (await this.isNameAlreadyExists(body.name)) {
-			throw new APIError('Name already exists', 400, true);
+			throw new APIError('Name already exists', 400);
 		}
 		if (body.permissions) {
 			await Promise.all(
 				body.permissions.map(async (pid) => {
 					if (!(await Permission.findById(pid))) {
-						throw new APIError('Permissions not exist', 400, true);
+						throw new APIError('Permissions not exist', 400);
 					}
 				})
 			);
@@ -62,16 +62,16 @@ class RoleClass {
 	static async updateRoleById(roleId, body) {
 		const role = await this.getRoleById(roleId);
 		if (!role) {
-			throw new APIError('Role not found', 404, true);
+			throw new APIError('Role not found', 404);
 		}
 		if (await this.isNameAlreadyExists(body.name, roleId)) {
-			throw new APIError('Name already exists', 400, true);
+			throw new APIError('Name already exists', 400);
 		}
 		if (body.permissions) {
 			await Promise.all(
 				body.permissions.map(async (pid) => {
 					if (!(await Permission.findById(pid))) {
-						throw new APIError('Permissions not exist', 400, true);
+						throw new APIError('Permissions not exist', 400);
 					}
 				})
 			);
@@ -83,7 +83,7 @@ class RoleClass {
 	static async deleteRoleById(roleId) {
 		const role = await this.getRoleById(roleId);
 		if (!role) {
-			throw new APIError('Role not found', 404, true);
+			throw new APIError('Role not found', 404);
 		}
 		return await role.remove();
 	}

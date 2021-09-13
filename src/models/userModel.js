@@ -4,6 +4,7 @@ import paginate from './plugins/paginatePlugin';
 import toJSON from './plugins/toJSONPlugin';
 import APIError from '~/utils/apiError';
 import Role from './roleModel';
+import { IMAGE_URL } from '~/config/env';
 
 const userSchema = mongoose.Schema(
 	{
@@ -46,12 +47,17 @@ const userSchema = mongoose.Schema(
 		]
 	},
 	{
-		timestamps: true
+		timestamps: true,
+		toJSON: { virtuals: true }
 	}
 );
 
 userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
+
+userSchema.virtual('avatarUrl').get(function () {
+	return IMAGE_URL + '/' + this.avatar;
+});
 
 class UserClass {
 	static async isUserNameAlreadyExists(userName, excludeUserId) {
@@ -84,16 +90,16 @@ class UserClass {
 
 	static async createUser(body) {
 		if (await this.isUserNameAlreadyExists(body.userName)) {
-			throw new APIError('User name already exists', 400, true);
+			throw new APIError('User name already exists', 400);
 		}
 		if (await this.isEmailAlreadyExists(body.email)) {
-			throw new APIError('Email already exists', 400, true);
+			throw new APIError('Email already exists', 400);
 		}
 		if (body.roles) {
 			await Promise.all(
 				body.roles.map(async (rid) => {
 					if (!(await Role.findById(rid))) {
-						throw new APIError('Roles not exist', 400, true);
+						throw new APIError('Roles not exist', 400);
 					}
 				})
 			);
@@ -104,19 +110,19 @@ class UserClass {
 	static async updateUserById(userId, body) {
 		const user = await this.getUserById(userId);
 		if (!user) {
-			throw new APIError('User not found', 404, true);
+			throw new APIError('User not found', 404);
 		}
 		if (await this.isUserNameAlreadyExists(body.userName, userId)) {
-			throw new APIError('User name already exists', 400, true);
+			throw new APIError('User name already exists', 400);
 		}
 		if (await this.isEmailAlreadyExists(body.email, userId)) {
-			throw new APIError('Email already exists', 400, true);
+			throw new APIError('Email already exists', 400);
 		}
 		if (body.roles) {
 			await Promise.all(
 				body.roles.map(async (rid) => {
 					if (!(await Role.findById(rid))) {
-						throw new APIError('Roles not exist', 400, true);
+						throw new APIError('Roles not exist', 400);
 					}
 				})
 			);
@@ -128,7 +134,7 @@ class UserClass {
 	static async deleteUserById(userId) {
 		const user = await this.getUserById(userId);
 		if (!user) {
-			throw new APIError('User not found', 404, true);
+			throw new APIError('User not found', 404);
 		}
 		return await user.remove();
 	}
