@@ -16,27 +16,16 @@ if (NODE_ENV !== 'test') {
 }
 
 app.use(helmet());
-
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: true }));
-
 app.use(compression());
-
 app.use(cors());
-
 app.use(rateLimiter);
-
 app.use(passport.initialize());
-
 app.use(express.static('public'));
-
 app.use('/api/v1', routes);
-
 app.use(error.converter);
-
 app.use(error.notFound);
-
 app.use(error.handler);
 
 export default app;

@@ -31,6 +31,8 @@ export const EMAIL_FROM = process.env.EMAIL_FROM || '';
 
 export const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:777';
 
+export const IMAGE_URL = process.env.IMAGE_URL || 'http://localhost:666/images';
+
 export const TOKEN_TYPES = {
 	REFRESH: 'refresh',
 	VERIFY_EMAIL: 'verifyEmail',
