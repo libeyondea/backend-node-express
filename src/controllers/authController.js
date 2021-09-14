@@ -21,7 +21,7 @@ export const signup = async (req, res) => {
 export const signin = async (req, res) => {
 	const user = await User.getUserByUserName(req.body.userName);
 	if (!user || !(await user.isPasswordMatch(req.body.password))) {
-		throw new APIError('Incorrect user name or password', 400);
+		throw new APIError('Incorrect user name or password', httpStatus.BAD_REQUEST);
 	}
 	const tokens = await tokenService.generateAuthTokens(user);
 	return res.json({
@@ -33,7 +33,7 @@ export const signin = async (req, res) => {
 export const getMe = async (req, res) => {
 	const user = await User.getUserByIdWithRoles(req.user.id);
 	if (!user) {
-		throw new APIError('User not found', 404);
+		throw new APIError('User not found', httpStatus.NOT_FOUND);
 	}
 	return res.json({
 		success: true,
@@ -73,14 +73,14 @@ export const refreshTokens = async (req, res) => {
 			}
 		});
 	} catch (err) {
-		throw new APIError('Refresh failed', 401);
+		throw new APIError('Refresh failed', httpStatus.UNAUTHORIZED);
 	}
 };
 
 export const sendVerificationEmail = async (req, res) => {
 	const user = await User.getUserByEmail(req.user.email);
 	if (user.confirmed) {
-		throw new APIError('Email verified', 400);
+		throw new APIError('Email verified', httpStatus.BAD_REQUEST);
 	}
 	const verifyEmailToken = await tokenService.generateVerifyEmailToken(req.user);
 	await emailService.sendVerificationEmail(req.user.email, verifyEmailToken);
@@ -104,7 +104,7 @@ export const verifyEmail = async (req, res) => {
 			data: 'Verify email success'
 		});
 	} catch (err) {
-		throw new APIError('Email verification failed', 401);
+		throw new APIError('Email verification failed', httpStatus.UNAUTHORIZED);
 	}
 };
 
@@ -131,6 +131,6 @@ export const resetPassword = async (req, res) => {
 			data: 'Reset password success'
 		});
 	} catch (err) {
-		throw new APIError('Password reset failed', 401);
+		throw new APIError('Password reset failed', httpStatus.UNAUTHORIZED);
 	}
 };

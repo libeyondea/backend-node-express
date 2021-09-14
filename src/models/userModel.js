@@ -5,6 +5,7 @@ import toJSON from './plugins/toJSONPlugin';
 import APIError from '~/utils/apiError';
 import Role from './roleModel';
 import { IMAGE_URL } from '~/config/env';
+import httpStatus from 'http-status';
 
 const userSchema = mongoose.Schema(
 	{
@@ -90,16 +91,16 @@ class UserClass {
 
 	static async createUser(body) {
 		if (await this.isUserNameAlreadyExists(body.userName)) {
-			throw new APIError('User name already exists', 400);
+			throw new APIError('User name already exists', httpStatus.BAD_REQUEST);
 		}
 		if (await this.isEmailAlreadyExists(body.email)) {
-			throw new APIError('Email already exists', 400);
+			throw new APIError('Email already exists', httpStatus.BAD_REQUEST);
 		}
 		if (body.roles) {
 			await Promise.all(
 				body.roles.map(async (rid) => {
 					if (!(await Role.findById(rid))) {
-						throw new APIError('Roles not exist', 400);
+						throw new APIError('Roles not exist', httpStatus.BAD_REQUEST);
 					}
 				})
 			);
@@ -110,19 +111,19 @@ class UserClass {
 	static async updateUserById(userId, body) {
 		const user = await this.getUserById(userId);
 		if (!user) {
-			throw new APIError('User not found', 404);
+			throw new APIError('User not found', httpStatus.NOT_FOUND);
 		}
 		if (await this.isUserNameAlreadyExists(body.userName, userId)) {
-			throw new APIError('User name already exists', 400);
+			throw new APIError('User name already exists', httpStatus.BAD_REQUEST);
 		}
 		if (await this.isEmailAlreadyExists(body.email, userId)) {
-			throw new APIError('Email already exists', 400);
+			throw new APIError('Email already exists', httpStatus.BAD_REQUEST);
 		}
 		if (body.roles) {
 			await Promise.all(
 				body.roles.map(async (rid) => {
 					if (!(await Role.findById(rid))) {
-						throw new APIError('Roles not exist', 400);
+						throw new APIError('Roles not exist', httpStatus.BAD_REQUEST);
 					}
 				})
 			);
@@ -134,7 +135,7 @@ class UserClass {
 	static async deleteUserById(userId) {
 		const user = await this.getUserById(userId);
 		if (!user) {
-			throw new APIError('User not found', 404);
+			throw new APIError('User not found', httpStatus.NOT_FOUND);
 		}
 		return await user.remove();
 	}

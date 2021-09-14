@@ -2,6 +2,7 @@ import _ from 'lodash';
 import APIError from '~/utils/apiError';
 import User from '~/models/userModel';
 import Role from '~/models/roleModel';
+import httpStatus from 'http-status';
 
 export const createUser = async (req, res) => {
 	const user = await User.createUser(req.body);
@@ -27,7 +28,7 @@ export const getUsers = async (req, res) => {
 export const getUser = async (req, res) => {
 	const user = await User.getUserByIdWithRoles(req.params.userId);
 	if (!user) {
-		throw new APIError('User not found', 404);
+		throw new APIError('User not found', httpStatus.NOT_FOUND);
 	}
 	return res.json({
 		success: true,
@@ -38,7 +39,7 @@ export const getUser = async (req, res) => {
 export const updateUser = async (req, res) => {
 	const role = await Role.getRoleByName('Super Administrator');
 	if (req.body.roles && !(await User.isRoleIdAlreadyExists(role.id, req.params.userId)) && !req.body.roles.includes(role.id)) {
-		throw new APIError('Requires at least 1 user as Super Administrator', 400);
+		throw new APIError('Requires at least 1 user as Super Administrator', httpStatus.BAD_REQUEST);
 	}
 	const user = await User.updateUserById(req.params.userId, req.body);
 	return res.json({
@@ -50,7 +51,7 @@ export const updateUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
 	const role = await Role.getRoleByName('Super Administrator');
 	if (!(await User.isRoleIdAlreadyExists(role.id, req.params.userId))) {
-		throw new APIError('Requires at least 1 user as Super Administrator', 400);
+		throw new APIError('Requires at least 1 user as Super Administrator', httpStatus.BAD_REQUEST);
 	}
 	await User.deleteUserById(req.params.userId);
 	return res.json({

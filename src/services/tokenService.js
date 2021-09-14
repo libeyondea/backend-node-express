@@ -14,6 +14,7 @@ import APIError from '~/utils/apiError';
 import User from '~/models/userModel';
 import Token from '~/models/tokenModel';
 import * as jwtService from './jwtService';
+import httpStatus from 'http-status';
 
 export const verifyToken = async (token, type) => {
 	let secret = '';
@@ -27,7 +28,7 @@ export const verifyToken = async (token, type) => {
 	const payload = await jwtService.verify(token, secret);
 	const tokenDoc = await Token.findOne({ user: payload.sub, token, type, blacklisted: false });
 	if (!tokenDoc) {
-		throw new APIError('Token not found', 401);
+		throw new APIError('Token not found', httpStatus.UNAUTHORIZED);
 	}
 	return tokenDoc;
 };
@@ -61,7 +62,7 @@ export const generateVerifyEmailToken = async (user) => {
 export const generateResetPasswordToken = async (email) => {
 	const user = await User.getUserByEmail(email);
 	if (!user) {
-		throw new APIError('No users found with this email', 404);
+		throw new APIError('No users found with this email', httpStatus.NOT_FOUND);
 	}
 	const expires = moment().add(JWT_RESET_PASSWORD_EXPIRATION_MINUTES, 'minutes');
 	const resetPasswordToken = jwtService.sign(user.id, expires, JWT_RESET_PASSWORD_SECRET);
