@@ -80,6 +80,9 @@ EMAIL_FROM =
 
 # URL frontend
 FRONTEND_URL =
+
+# URL images
+IMAGE_URL =
 ```
 
 ## Project Structure
