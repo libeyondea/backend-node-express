@@ -30,8 +30,8 @@ Generate JWT RS256 key:
 ssh-keygen -t rsa -P "" -b 2048 -m PEM -f storage/jwtRS256.key
 ssh-keygen -e -m PEM -f storage/jwtRS256.key > storage/jwtRS256.key.pub
 # encode base64
-cat storage/jwtRS256.key | base64 # edit JWT_ACCESS_TOKEN_SECRET_PRIVATE in file .env
-cat storage/jwtRS256.key.pub | base64 # edit JWT_ACCESS_TOKEN_SECRET_PUBLIC in file .env
+cat storage/jwtRS256.key | base64 # edit JWT_ACCESS_TOKEN_SECRET_PRIVATE in .env
+cat storage/jwtRS256.key.pub | base64 # edit JWT_ACCESS_TOKEN_SECRET_PUBLIC in .env
 ```
 
 ## Table of Contents
