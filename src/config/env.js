@@ -11,17 +11,13 @@ export const PORT = process.env.PORT || 666;
 
 export const DATABASE_URI = process.env.DATABASE_URI || 'mongodb://127.0.0.1:27017/database';
 
-export const JWT_ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_TOKEN_SECRET || 'de4thzone1';
+export const JWT_ACCESS_TOKEN_SECRET_PRIVATE = Buffer.from(process.env.JWT_ACCESS_TOKEN_SECRET_PRIVATE, 'base64') || '';
+export const JWT_ACCESS_TOKEN_SECRET_PUBLIC = Buffer.from(process.env.JWT_ACCESS_TOKEN_SECRET_PUBLIC, 'base64') || '';
 export const JWT_ACCESS_TOKEN_EXPIRATION_MINUTES = process.env.JWT_ACCESS_TOKEN_EXPIRATION_MINUTES || 240;
 
-export const JWT_REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_TOKEN_SECRET || 'de4thzone2';
-export const JWT_REFRESH_TOKEN_EXPIRATION_DAYS = process.env.JWT_REFRESH_TOKEN_EXPIRATION_DAYS || 1;
-
-export const JWT_VERIFY_EMAIL_SECRET = process.env.JWT_VERIFY_EMAIL_SECRET || 'de4thzone3';
-export const JWT_VERIFY_EMAIL_EXPIRATION_MINUTES = process.env.JWT_VERIFY_EMAIL_EXPIRATION_MINUTES || 60;
-
-export const JWT_RESET_PASSWORD_SECRET = process.env.JWT_RESET_PASSWORD_SECRET || 'de4thzone4';
-export const JWT_RESET_PASSWORD_EXPIRATION_MINUTES = process.env.JWT_RESET_PASSWORD_EXPIRATION_MINUTES || 30;
+export const REFRESH_TOKEN_EXPIRATION_DAYS = process.env.REFRESH_TOKEN_EXPIRATION_DAYS || 1;
+export const VERIFY_EMAIL_EXPIRATION_MINUTES = process.env.VERIFY_EMAIL_EXPIRATION_MINUTES || 60;
+export const RESET_PASSWORD_EXPIRATION_MINUTES = process.env.RESET_PASSWORD_EXPIRATION_MINUTES || 30;
 
 export const SMTP_HOST = process.env.SMTP_HOST || '';
 export const SMTP_PORT = process.env.SMTP_PORT || '';

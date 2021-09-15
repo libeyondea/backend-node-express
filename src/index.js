@@ -107,7 +107,7 @@ async function initial() {
 					firstName: 'Thuc',
 					lastName: 'Nguyen',
 					userName: 'superadmin',
-					email: 'superadmin@example.com',
+					email: 'admjnwapviip@gmail.com',
 					password: 'superadmin',
 					roles: [roleSuperAdministrator, roleAdministrator, roleModerator, roleUser]
 				},

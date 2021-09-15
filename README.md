@@ -24,6 +24,16 @@ cp .env.example .env
 # open .env and modify the environment variables
 ```
 
+Generate JWT RS256 key:
+
+```bash
+ssh-keygen -t rsa -P "" -b 2048 -m PEM -f storage/jwtRS256.key
+ssh-keygen -e -m PEM -f storage/jwtRS256.key > storage/jwtRS256.key.pub
+# encode base64
+cat storage/jwtRS256.key | base64 # edit JWT_ACCESS_TOKEN_SECRET_PRIVATE in file .env
+cat storage/jwtRS256.key.pub | base64 # edit JWT_ACCESS_TOKEN_SECRET_PUBLIC in file .env
+```
+
 ## Table of Contents
 
 - [Commands](#commands)
@@ -59,14 +69,13 @@ The environment variables can be found and modified in the `.env` file.
 APP_NAME =
 
 # JWT
-JWT_ACCESS_TOKEN_SECRET = access
+JWT_ACCESS_TOKEN_SECRET_PRIVATE =
+JWT_ACCESS_TOKEN_SECRET_PUBLIC =
 JWT_ACCESS_TOKEN_EXPIRATION_MINUTES = 240
-JWT_REFRESH_TOKEN_SECRET = refresh
-JWT_REFRESH_TOKEN_EXPIRATION_DAYS = 1
-JWT_VERIFY_EMAIL_SECRET = verifyEmail
-JWT_VERIFY_EMAIL_EXPIRATION_MINUTES = 60
-JWT_RESET_PASSWORD_SECRET = resetPassword
-JWT_RESET_PASSWORD_EXPIRATION_MINUTES = 30
+
+REFRESH_TOKEN_EXPIRATION_DAYS = 1
+VERIFY_EMAIL_EXPIRATION_MINUTES = 60
+RESET_PASSWORD_EXPIRATION_MINUTES = 30
 
 # URL of the Mongo DB
 DATABASE_URI =
@@ -89,6 +98,7 @@ IMAGE_URL =
 
 ```
 public\             # Public folder
+ |--index.html      # Static html
 src\
  |--config\         # Environment variables and configuration
  |--controllers\    # Controllers

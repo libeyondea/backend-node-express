@@ -73,7 +73,7 @@ export const refreshTokens = async (req, res) => {
 			}
 		});
 	} catch (err) {
-		throw new APIError('Refresh failed', httpStatus.UNAUTHORIZED);
+		throw new APIError(err.message, httpStatus.UNAUTHORIZED);
 	}
 };
 

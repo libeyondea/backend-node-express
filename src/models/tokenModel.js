@@ -43,7 +43,7 @@ class TokenClass {
 			user: userId,
 			token,
 			type,
-			expiresAt: expires.format(),
+			expiresAt: expires,
 			blacklisted
 		});
 		return tokenDoc;

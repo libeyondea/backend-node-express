@@ -7,18 +7,13 @@ import * as roleController from '~/controllers/roleController';
 
 const router = Router();
 
-router.get('/', authenticate(['read', 'role']), validate(roleValidation.getRoles), catchAsync(roleController.getRoles));
-router.post('/', authenticate(['create', 'role']), validate(roleValidation.createRole), catchAsync(roleController.createRole));
-router.get('/:roleId', authenticate(['read', 'role']), validate(roleValidation.getRole), catchAsync(roleController.getRole));
-router.put(
-	'/:roleId',
-	authenticate(['update', 'role']),
-	validate(roleValidation.updateRole),
-	catchAsync(roleController.updateRole)
-);
+router.get('/', authenticate('role:read'), validate(roleValidation.getRoles), catchAsync(roleController.getRoles));
+router.post('/', authenticate('role:create'), validate(roleValidation.createRole), catchAsync(roleController.createRole));
+router.get('/:roleId', authenticate('role:read'), validate(roleValidation.getRole), catchAsync(roleController.getRole));
+router.put('/:roleId', authenticate('role:update'), validate(roleValidation.updateRole), catchAsync(roleController.updateRole));
 router.delete(
 	'/:roleId',
-	authenticate(['delete', 'role']),
+	authenticate('role:delete'),
 	validate(roleValidation.deleteRole),
 	catchAsync(roleController.deleteRole)
 );

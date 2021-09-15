@@ -12,3 +12,6 @@
 
 # images
 /public/images
+
+# storage
+/storage/*.key*
