@@ -3,9 +3,9 @@ import httpStatus from 'http-status';
 import APIError from '~/utils/apiError';
 import Role from '~/models/roleModel';
 
-const verifyCallback = (req, resolve, reject, requiredRights) => async (err, user, info) => {
+const verifyCallback = (req, next, /* resolve, reject, */ requiredRights) => async (err, user, info) => {
 	if (err || info || !user) {
-		return reject(new APIError(httpStatus[httpStatus.UNAUTHORIZED], httpStatus.UNAUTHORIZED));
+		return next(new APIError(httpStatus[httpStatus.UNAUTHORIZED], httpStatus.UNAUTHORIZED));
 	}
 	req.user = user;
 	if (requiredRights.length) {
@@ -21,20 +21,24 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (err, use
 		//console.log('userRights: ', userRights);
 		//console.log('boolean: ', hasRequiredRights);
 		if (!hasRequiredRights) {
-			return reject(new APIError('Resource access denied', httpStatus.FORBIDDEN));
+			return next(new APIError('Resource access denied', httpStatus.FORBIDDEN));
 		}
 	}
-	return resolve();
+	return next();
 };
 
 const authenticate =
 	(...requiredRights) =>
 	async (req, res, next) => {
-		return new Promise((resolve, reject) => {
-			passport.authenticate('jwt', { session: false }, verifyCallback(req, resolve, reject, requiredRights))(req, res, next);
-		})
-			.then(() => next())
-			.catch((err) => next(err));
+		//		return new Promise((resolve, reject) => {
+		return passport.authenticate('jwt', { session: false }, verifyCallback(req, next, /* resolve, reject, */ requiredRights))(
+			req,
+			res,
+			next
+		);
 	};
+//		})
+//			.then(() => next())
+//			.catch((err) => next(err));
 
 export default authenticate;
