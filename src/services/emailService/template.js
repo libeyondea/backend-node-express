@@ -538,3 +538,5 @@ export const resetPassword = (url, appName) => {
 </html>
 `;
 };
+
+export default { verifyEmail, resetPassword };

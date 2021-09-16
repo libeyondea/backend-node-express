@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { DATABASE_URI, HOST, PORT } from '~/config/env';
+import config from '~/config/config';
 import app from '~/config/express';
 import logger from './config/logger';
 import Permission from './models/permissionModel';
@@ -143,15 +143,12 @@ async function initial() {
 }
 
 mongoose
-	.connect(DATABASE_URI, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true
-	})
+	.connect(config.DATABASE_URI, config.DATABASE_OPTIONS)
 	.then(() => {
 		initial();
 		logger.info('🚀 Connected to MongoDB end!');
-		server = app.listen(PORT, HOST, () => {
-			logger.info(`🚀 Host: http://${HOST}:${PORT}`);
+		server = app.listen(config.PORT, config.HOST, () => {
+			logger.info(`🚀 Host: http://${config.HOST}:${config.PORT}`);
 			logger.info('██████╗░░░██╗██╗███████╗');
 			logger.info('██╔══██╗░██╔╝██║╚════██║');
 			logger.info('██║░░██║██╔╝░██║░░███╔═╝');

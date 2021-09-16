@@ -43,7 +43,7 @@ cat storage/jwtRS256.key.pub | base64 # edit JWT_ACCESS_TOKEN_SECRET_PUBLIC in .
 
 ## Commands
 
-Running in local:
+Running in development:
 
 ```bash
 npm start
@@ -66,19 +66,25 @@ The environment variables can be found and modified in the `.env` file.
 
 ```bash
 # App name
-APP_NAME =
+APP_NAME = # default App Name
+
+# Host
+HOST = # default 0.0.0.0
+# Port
+PORT = # default 666
+
+# URL of the Mongo DB
+DATABASE_URI = mongodb://127.0.0.1:27017/database_name
 
 # JWT
 JWT_ACCESS_TOKEN_SECRET_PRIVATE =
 JWT_ACCESS_TOKEN_SECRET_PUBLIC =
-JWT_ACCESS_TOKEN_EXPIRATION_MINUTES = 240
+JWT_ACCESS_TOKEN_EXPIRATION_MINUTES = # default 240 minutes
 
-REFRESH_TOKEN_EXPIRATION_DAYS = 1
-VERIFY_EMAIL_EXPIRATION_MINUTES = 60
-RESET_PASSWORD_EXPIRATION_MINUTES = 30
-
-# URL of the Mongo DB
-DATABASE_URI =
+# Token expires
+REFRESH_TOKEN_EXPIRATION_DAYS = # default 1 day
+VERIFY_EMAIL_TOKEN_EXPIRATION_MINUTES = # default 60 minutes
+RESET_PASSWORD_TOKEN_EXPIRATION_MINUTES = # default 30 minutes
 
 # SMTP configuration
 SMTP_HOST = smtp.googlemail.com
@@ -88,10 +94,10 @@ SMTP_PASSWORD =
 EMAIL_FROM =
 
 # URL frontend
-FRONTEND_URL =
+FRONTEND_URL = # default http://localhost:777
 
 # URL images
-IMAGE_URL =
+IMAGE_URL = # default http://localhost:666/images
 ```
 
 ## Project Structure

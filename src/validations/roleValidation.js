@@ -41,3 +41,5 @@ export const getRole = {
 		roleId: Joi.string().custom(mongoId)
 	})
 };
+
+export default { createRole, getRole, updateRole, getRoles, deleteRole };

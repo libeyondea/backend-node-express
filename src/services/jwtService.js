@@ -23,3 +23,5 @@ export const verify = async (token, secret, options) => {
 		throw new APIError(err.message, httpStatus.UNAUTHORIZED);
 	}
 };
+
+export default { sign, verify };

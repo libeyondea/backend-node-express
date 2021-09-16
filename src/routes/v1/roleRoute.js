@@ -2,8 +2,8 @@ import { Router } from 'express';
 import catchAsync from '~/utils/catchAsync';
 import validate from '~/middlewares/validate';
 import authenticate from '~/middlewares/authenticate';
-import * as roleValidation from '~/validations/roleValidation';
-import * as roleController from '~/controllers/roleController';
+import roleValidation from '~/validations/roleValidation';
+import roleController from '~/controllers/roleController';
 
 const router = Router();
 

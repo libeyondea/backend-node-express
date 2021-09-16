@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
-import { DATABASE_URI } from './env';
+import config from './config';
 import logger from './logger';
 
 const mongooseConnect = () => {
 	const reconnectTimeout = 5000;
 
 	const connect = () => {
-		mongoose.connect(DATABASE_URI, {
+		mongoose.connect(config.DATABASE_URI, {
 			useNewUrlParser: true,
 			useUnifiedTopology: true
 		});

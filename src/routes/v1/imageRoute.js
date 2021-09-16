@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import catchAsync from '~/utils/catchAsync';
-import * as imageController from '~/controllers/imageController';
+import imageController from '~/controllers/imageController';
 import uploadImage from '~/middlewares/uploadImage';
 import authenticate from '~/middlewares/authenticate';
 

@@ -4,14 +4,14 @@ import helmet from 'helmet';
 import cors from 'cors';
 import passport from './passport';
 import routes from '~/routes/v1';
-import * as error from '~/middlewares/error';
+import error from '~/middlewares/error';
 import rateLimiter from '~/middlewares/rateLimiter';
-import { NODE_ENV } from './env';
+import config from './config';
 import morgan from './morgan';
 
 const app = express();
 
-if (NODE_ENV !== 'test') {
+if (config.NODE_ENV !== 'test') {
 	app.use(morgan);
 }
 

@@ -1,6 +1,6 @@
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
-import { TOKEN_TYPES } from '~/config/env';
+import config from '~/config/config';
 import APIError from '~/utils/apiError';
 import toJSON from './plugins/toJSONPlugin';
 
@@ -18,7 +18,7 @@ const tokenSchema = mongoose.Schema(
 		},
 		type: {
 			type: String,
-			enum: [TOKEN_TYPES.REFRESH, TOKEN_TYPES.RESET_PASSWORD, TOKEN_TYPES.VERIFY_EMAIL],
+			enum: [config.TOKEN_TYPES.REFRESH, config.TOKEN_TYPES.RESET_PASSWORD, config.TOKEN_TYPES.VERIFY_EMAIL],
 			required: true
 		},
 		blacklisted: {

@@ -1,5 +1,5 @@
 import winston from 'winston';
-import { NODE_ENV } from './env';
+import config from './config';
 
 const levels = {
 	error: 0,
@@ -18,7 +18,7 @@ winston.addColors({
 });
 
 const logger = winston.createLogger({
-	level: NODE_ENV === 'development' ? 'debug' : 'info',
+	level: config.NODE_ENV === 'development' ? 'debug' : 'info',
 	levels,
 	format: winston.format.combine(
 		winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),

@@ -49,3 +49,5 @@ export const deleteUser = {
 		userId: Joi.string().custom(mongoId)
 	})
 };
+
+export default { createUser, getUsers, getUser, updateUser, deleteUser };

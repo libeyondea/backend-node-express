@@ -59,3 +59,5 @@ export const deleteUser = async (req, res) => {
 		data: 'Delete user success'
 	});
 };
+
+export default { createUser, getUsers, getUser, updateUser, deleteUser };

@@ -1,8 +1,8 @@
 import APIError from '~/utils/apiError';
-import * as tokenService from '~/services/tokenService';
-import * as emailService from '~/services/emailService';
+import tokenService from '~/services/tokenService';
+import emailService from '~/services/emailService';
 import User from '~/models/userModel';
-import { TOKEN_TYPES } from '~/config/env';
+import config from '~/config/config';
 import httpStatus from 'http-status';
 import Token from '~/models/tokenModel';
 import Role from '~/models/roleModel';
@@ -50,7 +50,7 @@ export const updateMe = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-	await Token.revokeToken(req.body.refreshToken, TOKEN_TYPES.REFRESH);
+	await Token.revokeToken(req.body.refreshToken, config.TOKEN_TYPES.REFRESH);
 	return res.json({
 		success: true,
 		data: 'Logout success'
@@ -59,7 +59,7 @@ export const logout = async (req, res) => {
 
 export const refreshTokens = async (req, res) => {
 	try {
-		const refreshTokenDoc = await tokenService.verifyToken(req.body.refreshToken, TOKEN_TYPES.REFRESH);
+		const refreshTokenDoc = await tokenService.verifyToken(req.body.refreshToken, config.TOKEN_TYPES.REFRESH);
 		const user = await User.getUserById(refreshTokenDoc.user);
 		if (!user) {
 			throw new Error();
@@ -92,12 +92,12 @@ export const sendVerificationEmail = async (req, res) => {
 
 export const verifyEmail = async (req, res) => {
 	try {
-		const verifyEmailTokenDoc = await tokenService.verifyToken(req.query.token, TOKEN_TYPES.VERIFY_EMAIL);
+		const verifyEmailTokenDoc = await tokenService.verifyToken(req.query.token, config.TOKEN_TYPES.VERIFY_EMAIL);
 		const user = await User.getUserById(verifyEmailTokenDoc.user);
 		if (!user) {
 			throw new Error();
 		}
-		await Token.deleteMany({ user: user.id, type: TOKEN_TYPES.VERIFY_EMAIL });
+		await Token.deleteMany({ user: user.id, type: config.TOKEN_TYPES.VERIFY_EMAIL });
 		await User.updateUserById(user.id, { confirmed: true });
 		return res.json({
 			success: true,
@@ -119,12 +119,12 @@ export const forgotPassword = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
 	try {
-		const resetPasswordTokenDoc = await tokenService.verifyToken(req.query.token, TOKEN_TYPES.RESET_PASSWORD);
+		const resetPasswordTokenDoc = await tokenService.verifyToken(req.query.token, config.TOKEN_TYPES.RESET_PASSWORD);
 		const user = await User.getUserById(resetPasswordTokenDoc.user);
 		if (!user) {
 			throw new Error();
 		}
-		await Token.deleteMany({ user: user.id, type: TOKEN_TYPES.RESET_PASSWORD });
+		await Token.deleteMany({ user: user.id, type: config.TOKEN_TYPES.RESET_PASSWORD });
 		await User.updateUserById(user.id, { password: req.body.password });
 		return res.json({
 			success: true,
@@ -133,4 +133,17 @@ export const resetPassword = async (req, res) => {
 	} catch (err) {
 		throw new APIError('Password reset failed', httpStatus.UNAUTHORIZED);
 	}
+};
+
+export default {
+	signup,
+	signin,
+	getMe,
+	updateMe,
+	logout,
+	refreshTokens,
+	sendVerificationEmail,
+	verifyEmail,
+	forgotPassword,
+	resetPassword
 };

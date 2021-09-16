@@ -4,7 +4,7 @@ import paginate from './plugins/paginatePlugin';
 import toJSON from './plugins/toJSONPlugin';
 import APIError from '~/utils/apiError';
 import Role from './roleModel';
-import { IMAGE_URL } from '~/config/env';
+import config from '~/config/config';
 import httpStatus from 'http-status';
 
 const userSchema = mongoose.Schema(
@@ -57,7 +57,7 @@ userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
 
 userSchema.virtual('avatarUrl').get(function () {
-	return IMAGE_URL + '/' + this.avatar;
+	return config.IMAGE_URL + '/' + this.avatar;
 });
 
 class UserClass {

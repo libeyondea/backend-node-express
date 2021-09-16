@@ -1,13 +1,13 @@
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import passport from 'passport';
-import { JWT_ACCESS_TOKEN_SECRET_PUBLIC } from './env';
+import config from './config';
 import User from '~/models/userModel';
 
 passport.use(
 	new JwtStrategy(
 		{
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-			secretOrKey: JWT_ACCESS_TOKEN_SECRET_PUBLIC
+			secretOrKey: config.JWT_ACCESS_TOKEN_SECRET_PUBLIC
 		},
 		async (jwtPayload, done) => {
 			try {

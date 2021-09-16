@@ -60,3 +60,14 @@ export const updateMe = {
 		avatar: Joi.string().max(666)
 	})
 };
+
+export default {
+	signup,
+	signin,
+	updateMe,
+	logout,
+	refreshTokens,
+	verifyEmail,
+	forgotPassword,
+	resetPassword
+};

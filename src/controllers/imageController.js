@@ -9,3 +9,5 @@ export const uploadImage = async (req, res) => {
 	const fileName = await ResizeImage(req.file.destination, req.file.filename);
 	return res.json({ image: fileName });
 };
+
+export default { uploadImage };

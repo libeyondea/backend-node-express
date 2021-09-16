@@ -1,6 +1,6 @@
 import httpStatus from 'http-status';
 import Joi from 'joi';
-import { NODE_ENV } from '~/config/env';
+import config from '~/config/config';
 import logger from '~/config/logger';
 import APIError from '~/utils/apiError';
 
@@ -34,16 +34,18 @@ export const notFound = (req, res, next) => {
 
 export const handler = (err, req, res, next) => {
 	let { status, message } = err;
-	if (NODE_ENV === 'production' && !err.isOperational) {
+	if (config.NODE_ENV === 'production' && !err.isOperational) {
 		status = httpStatus.INTERNAL_SERVER_ERROR;
 		message = httpStatus[httpStatus.INTERNAL_SERVER_ERROR];
 	}
-	if (NODE_ENV === 'development') {
+	if (config.NODE_ENV === 'development') {
 		logger.error(err);
 	}
 	return res.status(status).json({
 		status: status,
 		errors: message,
-		...(NODE_ENV === 'development' && { stack: err.stack })
+		...(config.NODE_ENV === 'development' && { stack: err.stack })
 	});
 };
+
+export default { converter, notFound, handler };

@@ -2,8 +2,8 @@ import { Router } from 'express';
 import catchAsync from '~/utils/catchAsync';
 import validate from '~/middlewares/validate';
 import authenticate from '~/middlewares/authenticate';
-import * as authValidation from '~/validations/authValidation';
-import * as authController from '~/controllers/authController';
+import authValidation from '~/validations/authValidation';
+import authController from '~/controllers/authController';
 
 const router = Router();
 
