@@ -15,7 +15,32 @@ export const createUser = async (req, res) => {
 export const getUsers = async (req, res) => {
 	const filters = _.pick(req.query, ['q']);
 	const options = _.pick(req.query, ['limit', 'page', 'sortBy', 'sortDirection']);
-	const users = await User.paginate(filters, options, ['firstName', 'lastName', 'userName']);
+	const users = await User.paginate(
+		options,
+		'roles.permissions',
+		filters.q && {
+			$or: [
+				{
+					firstName: {
+						$regex: filters.q,
+						$options: 'i'
+					}
+				},
+				{
+					lastName: {
+						$regex: filters.q,
+						$options: 'i'
+					}
+				},
+				{
+					userName: {
+						$regex: filters.q,
+						$options: 'i'
+					}
+				}
+			]
+		}
+	);
 	return res.json({
 		success: true,
 		data: users.results,

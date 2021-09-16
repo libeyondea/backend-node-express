@@ -34,7 +34,26 @@ export const updateRole = async (req, res) => {
 export const getRoles = async (req, res) => {
 	const filters = _.pick(req.query, ['q']);
 	const options = _.pick(req.query, ['limit', 'page', 'sortBy', 'sortDirection']);
-	const roles = await Role.paginate(filters, options, ['name']);
+	const roles = await Role.paginate(
+		options,
+		'permissions',
+		filters.q && {
+			$or: [
+				{
+					name: {
+						$regex: filters.q,
+						$options: 'i'
+					}
+				},
+				{
+					description: {
+						$regex: filters.q,
+						$options: 'i'
+					}
+				}
+			]
+		}
+	);
 	return res.json({
 		success: true,
 		data: roles.results,

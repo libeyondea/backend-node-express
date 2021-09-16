@@ -2,12 +2,12 @@ import express from 'express';
 import compression from 'compression';
 import helmet from 'helmet';
 import cors from 'cors';
-import passport from './passport';
+import passport from '~/config/passport';
 import routes from '~/routes/v1';
 import error from '~/middlewares/error';
 import rateLimiter from '~/middlewares/rateLimiter';
-import config from './config';
-import morgan from './morgan';
+import config from '~/config/config';
+import morgan from '~/config/morgan';
 
 const app = express();
 

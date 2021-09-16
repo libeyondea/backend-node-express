@@ -6,7 +6,6 @@ import logger from './logger';
 async function initialData() {
 	try {
 		const countPermissions = await Permission.estimatedDocumentCount();
-		console.log(1, countPermissions);
 		if (countPermissions === 0) {
 			await Permission.create(
 				{
@@ -44,7 +43,6 @@ async function initialData() {
 			);
 		}
 		const countRoles = await Role.estimatedDocumentCount();
-		console.log(2, countRoles);
 		if (countRoles === 0) {
 			const permissionsSuperAdministrator = await Permission.find();
 			const permissionsAdministrator = await Permission.find({ controller: 'user' });
@@ -69,7 +67,6 @@ async function initialData() {
 			);
 		}
 		const countUsers = await User.estimatedDocumentCount();
-		console.log(3, countUsers);
 		if (countUsers === 0) {
 			const roleSuperAdministrator = await Role.findOne({ name: 'Super Administrator' });
 			const roleAdministrator = await Role.findOne({ name: 'Administrator' });
