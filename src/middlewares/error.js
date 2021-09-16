@@ -38,9 +38,7 @@ export const handler = (err, req, res, next) => {
 		status = httpStatus.INTERNAL_SERVER_ERROR;
 		message = httpStatus[httpStatus.INTERNAL_SERVER_ERROR];
 	}
-	if (config.NODE_ENV === 'development') {
-		logger.error(err);
-	}
+	logger.error(err.stack);
 	return res.status(status).json({
 		status: status,
 		errors: message,
