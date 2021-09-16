@@ -4,7 +4,6 @@ module.exports = {
 			name: 'backend-node-express"',
 			script: 'dist/index.js',
 			instances: 'max',
-			exec_mode: 'cluster',
 			env: {
 				NODE_ENV: 'development'
 			},
