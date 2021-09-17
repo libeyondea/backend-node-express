@@ -6,6 +6,6 @@ import authenticate from '~/middlewares/authenticate';
 
 const router = Router();
 
-router.post('/upload', authenticate(), uploadImage, catchAsync(imageController.uploadImage));
+router.post('/upload', /* authenticate(), */ uploadImage, catchAsync(imageController.uploadImage));
 
 export default router;
