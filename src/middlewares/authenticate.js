@@ -36,7 +36,6 @@ const authenticate =
 			.then(() => next())
 			.catch((err) => {
 				next(err);
-				res.end();
 			});
 	};
 
