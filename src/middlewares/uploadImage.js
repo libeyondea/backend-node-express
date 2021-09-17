@@ -33,11 +33,11 @@ const upload = multer({
 }).single('image');
 
 const uploadImage = (req, res, next) => {
-	let test = 1;
-	if (test === 1) {
-		return next(new APIError(httpStatus[httpStatus.UNAUTHORIZED], httpStatus.UNAUTHORIZED));
-	}
 	upload(req, res, (err) => {
+		let test = 1;
+		if (test === 1) {
+			return next(new APIError(httpStatus[httpStatus.UNAUTHORIZED], httpStatus.UNAUTHORIZED));
+		}
 		if (err instanceof multer.MulterError) {
 			return next(new APIError(err.message, httpStatus.BAD_REQUEST));
 		} else if (err) {
