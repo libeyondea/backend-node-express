@@ -7,7 +7,7 @@ The project builds RESTful APIs using Node.js, Express and Mongoose, ...
 Clone the repo:
 
 ```bash
-git clone https://github.com/de4th-zone/backend-node-express.git
+git clone https://github.com/libeyondea/backend-node-express.git
 cd backend-node-express
 ```
 
