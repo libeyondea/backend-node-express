@@ -30,6 +30,22 @@ export const signin = async (req, res) => {
 	});
 };
 
+export const current = async (req, res) => {
+	const user = await User.getUserById(req.user.id);
+	if (!user) {
+		throw new APIError('User not found', httpStatus.NOT_FOUND);
+	}
+	return res.json({
+		success: true,
+		data: {
+			firstName: user.firstName,
+			lastName: user.lastName,
+			userName: user.userName,
+			avatarUrl: user.avatarUrl
+		}
+	});
+};
+
 export const getMe = async (req, res) => {
 	const user = await User.getUserByIdWithRoles(req.user.id);
 	if (!user) {
@@ -138,6 +154,7 @@ export const resetPassword = async (req, res) => {
 export default {
 	signup,
 	signin,
+	current,
 	getMe,
 	updateMe,
 	logout,
