@@ -17,7 +17,7 @@ export const signin = {
 	})
 };
 
-export const logout = {
+export const signout = {
 	body: Joi.object().keys({
 		refreshToken: Joi.string().required()
 	})
@@ -65,7 +65,7 @@ export default {
 	signup,
 	signin,
 	updateMe,
-	logout,
+	signout,
 	refreshTokens,
 	verifyEmail,
 	forgotPassword,
