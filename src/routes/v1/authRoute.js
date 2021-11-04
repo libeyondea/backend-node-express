@@ -12,7 +12,7 @@ router.post('/signin', validate(authValidation.signin), catchAsync(authControlle
 router.get('/current', authenticate(), catchAsync(authController.current));
 router.get('/me', authenticate(), catchAsync(authController.getMe));
 router.put('/me', authenticate(), validate(authValidation.updateMe), catchAsync(authController.updateMe));
-router.post('/logout', validate(authValidation.logout), catchAsync(authController.logout));
+router.post('/signout', validate(authValidation.signout), catchAsync(authController.signout));
 router.post('/refresh-tokens', validate(authValidation.refreshTokens), catchAsync(authController.refreshTokens));
 router.post('/send-verification-email', authenticate(), catchAsync(authController.sendVerificationEmail));
 router.post('/verify-email', validate(authValidation.verifyEmail), catchAsync(authController.verifyEmail));
