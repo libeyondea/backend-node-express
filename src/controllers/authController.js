@@ -65,11 +65,11 @@ export const updateMe = async (req, res) => {
 	});
 };
 
-export const logout = async (req, res) => {
+export const signout = async (req, res) => {
 	await Token.revokeToken(req.body.refreshToken, config.TOKEN_TYPES.REFRESH);
 	return res.json({
 		success: true,
-		data: 'Logout success'
+		data: 'Signout success'
 	});
 };
 
@@ -157,7 +157,7 @@ export default {
 	current,
 	getMe,
 	updateMe,
-	logout,
+	signout,
 	refreshTokens,
 	sendVerificationEmail,
 	verifyEmail,
