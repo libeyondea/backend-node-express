@@ -143,9 +143,9 @@ List of available routes:
 **Role routes**:\
 `POST api/v1/roles` - Create a role\
 `GET api/v1/roles` - Get all roles\
-`GET api/v1/roles/:userId` - Get role\
-`PUT api/v1/roles/:userId` - Update role\
-`DELETE api/v1/roles/:userId` - Delete role
+`GET api/v1/roles/:roleId` - Get role\
+`PUT api/v1/roles/:roleId` - Update role\
+`DELETE api/v1/roles/:roleId` - Delete role
 
 **Image routes**:\
 `POST api/v1/images/upload` - Upload image
